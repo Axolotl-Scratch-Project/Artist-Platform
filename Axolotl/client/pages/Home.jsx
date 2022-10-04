@@ -4,7 +4,7 @@ import Navbar from '../component/Navbar'
 import SideBar from '../component/SideBar'
 import SideBar2 from '../component/SideBar2'
 
-import { Box , Stack,Grid } from '@mui/material';
+import { Box,Stack,Grid } from '@mui/material';
 import { Category, PriceChange } from '@mui/icons-material';
 
 const Home = () => {
@@ -15,14 +15,16 @@ const Home = () => {
           <SideBar/>
           <Feed/>
         </Stack> */}
-        <Grid container spacing={2} columns={10}>
+        {/* <Grid container spacing={2} columns={10}>
           <Grid item xs={4}>
           <SideBar2/>
             </Grid>
           <Grid item xs={6}>
           <Feed/>
             </Grid>
-          </Grid>
+          </Grid> */}
+
+        <Feed/>
       </Box>
   )
 }

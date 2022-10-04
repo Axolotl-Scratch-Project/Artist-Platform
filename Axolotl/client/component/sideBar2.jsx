@@ -13,37 +13,37 @@ import Button from "@material-ui/core/Button";
 import { Box } from "@mui/system";
 import InputLabel from "@material-ui/core/InputLabel";
 
-const defaultValues = {
-  name: "",
-  os: "",
-  priceRange: [0,110],
-};
-const SideBar2 = () => {
-  const [formValues, setFormValues] = useState(defaultValues);
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormValues({
-      ...formValues,
-      [name]: value,
-    });
-  };
-  const handleSliderChange = (name) => (e, value) => {
-    setFormValues({
-      ...formValues,
-      [name]: value,
-    });
-  };
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(formValues);
-  };
+// const defaultValues = {
+//   name: "",
+//   os: "",
+//   priceRange: [0,110],
+// };
+const SideBar2 = (props) => {
+  // const [formValues, setFormValues] = useState(defaultValues);
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setFormValues({
+  //     ...formValues,
+  //     [name]: value,
+  //   });
+  // };
+  // const handleSliderChange = (name) => (e, value) => {
+  //   setFormValues({
+  //     ...formValues,
+  //     [name]: value,
+  //   });
+  // };
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
+  //   console.log(formValues);
+  // };
 
-  function valuetext(formValues) {
-    return {formValues};
-  }
+  // function valuetext(formValues) {
+  //   return {formValues};
+  // }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={props.handleSubmit}>
       <Grid container alignItems="center" justifyContent="center" direction="column">
         <Grid item>
           <TextField
@@ -51,8 +51,8 @@ const SideBar2 = () => {
             name="name"
             label="Artist Name"
             type="text"
-            value={formValues.name}
-            onChange={handleInputChange}
+            value={props.formValues.name}
+            onChange={props.handleInputChange}
           />
         </Grid>
         {/* <Grid item>
@@ -103,12 +103,12 @@ const SideBar2 = () => {
                 id="demo-simple-select"
                 name="os"
                 label="Genre"
-                value={formValues.os}
-                onChange={handleInputChange}
+                value={props.formValues.os}
+                onChange={props.handleInputChange}
               >
-                <MenuItem value={10}>Ten</MenuItem>
-                <MenuItem value={20}>Twenty</MenuItem>
-                <MenuItem value={30}>Thirty</MenuItem>
+                <MenuItem value={10}>Jazz</MenuItem>
+                <MenuItem value={20}>Rock</MenuItem>
+                <MenuItem value={30}>Country</MenuItem>
               </Select>
             </FormControl>
         </Box>
@@ -116,14 +116,14 @@ const SideBar2 = () => {
           <div style={{ width: "170px" }}>
             Price
             <Slider
-              value={formValues.priceRange}
-              onChange={handleSliderChange("priceRange")}
+              value={props.formValues.priceRange}
+              onChange={props.handleSliderChange("priceRange")}
               defaultValue={1}
               // getAriaLabel={() => 'Temperature range'}
               // value={value}
               // onChange={handleChange}
               valueLabelDisplay="auto"
-              getAriaValueText={valuetext}
+              getAriaValueText={props.valuetext}
               min={10}
               max={150}
             />
