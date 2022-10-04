@@ -9,6 +9,7 @@ const bookingController = require('./controllers/bookingController');
 
 
 const dotenv = require('dotenv');
+const { application } = require('express');
 dotenv.config();
 
 const app = express();
@@ -18,13 +19,11 @@ app.use(express.json());
 // app.use(bodyParser.json());
 const port = process.env.PORT || 3000;
 
-console.log("hello world");
-
-const testFunction = async () => {
-  const add = `INSERT INTO users (name, email, password, location) VALUES ('Yirou', 'yirou@gmail.com', '6789', 'new york city')`
-  await db.query(add)
-  console.log('textFunction executed')
-}
+// const testFunction = async () => {
+//   const add = `INSERT INTO users (name, email, password, location) VALUES ('Yirou', 'yirou@gmail.com', '6789', 'new york city')`
+//   await db.query(add)
+//   console.log('textFunction executed')
+// }
 // testFunction();
 
 
@@ -32,23 +31,22 @@ const testFunction = async () => {
 // WE NEED SPECIFIC NAMES / URIs
 // get/post/patch...
 
+console.log(userController);
+app.post('/api/test', (req, res) => {
+  console.log("TEST");
+  res.json("xd")
+}); 
 
-// /api/signup
-app.post('/api/signup', userController.saveUser, (req, res) => {
+// SIGNUP
+app.post('/api/saveUser', userController.saveUser, (req, res) => {
   //save user/artist in corresponding database
-  return res.status(200);
+  return res.status(200).json({ newUserData: res.locals.userData });
 });
-//signup
-  // post
-  // save name, email, password in user tabele if user type if individual
-  // save bio_short, email, password, locatiion, hourly rate in artist table if individual
 
-//login
-app.post('/api/login', userController.loginUser, (req, res) => {
-  //join user and artist table
-  //authenticate user with email
-  //login user
-  return res.status(200);
+// LOGIN
+app.post('/api/login', userController.loginUser, (req, res, next) => {
+  //authenticate user or artist with email
+  return res.status(200).json({ has_account: res.locals.doesUserExist });
 })
 
 
@@ -75,6 +73,10 @@ app.post('/api/login', userController.loginUser, (req, res) => {
 //   //search criteria will be passed through request params
 // });
 
+app.post('/api/saveArtist', artistController.saveArtist, (req, res) => {
+  return res.status(200).json();
+})
+
 
 //backend send a full list of artist
 app.get('/api/artists', artistController.getAllArtists, (req, res) => {
@@ -84,34 +86,34 @@ app.get('/api/artists', artistController.getAllArtists, (req, res) => {
 
 // booking (user / artist)
   //post request, time slot, user id, artist id will be passed through request body
-app.post('api/booking', bookingController.createBooking, (req, res) => {
+app.post('/api/booking', bookingController.createBooking, (req, res) => {
   // create a booking in booking table
   return res.status(200).json('api/booking');
 })
 
-app.get('api/booking', bookingController.getBookings, (req, res) => {
+app.get('/api/booking', bookingController.getBookings, (req, res) => {
   // display bookings
   return res.status(200).json('api/booking');
 });
 
 
 // ARTIST STUFF and PROFILES
-app.post('api/profile/:artist', artistController.createProfile, (req, res) => {
+app.post('/api/profile/:artist', artistController.createProfile, (req, res) => {
   // create artist profile
   return res.status(200).json('api/artist');
 });
 
-app.get('api/profile/:artist', artistController.getProfile, (req, res) => {
+app.get('/api/profile/:artist', artistController.getProfile, (req, res) => {
   // display artist profile
   return res.status(200);
 });
 
-app.put('api/profile/:artist', artistController.editProfile, (req, res) => {
+app.put('/api/profile/:artist', artistController.editProfile, (req, res) => {
   // edit artist profile
   return res.status(200);
 })
 
-app.get('api/profile/:/artist/links', artistController.getPortfolioLinks, (req, res) => {
+app.get('/api/profile/:artist/links', artistController.getPortfolioLinks, (req, res) => {
   // display all URLs on artists's portfolio
   return res.status(200);
 });
@@ -122,6 +124,19 @@ app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
 });
 
+
+// catch-all route handler for any requests to an unknown route
+app.use((req, res, next) => {
+  const error = new HttpError('Could not find this route.', 404);
+  throw error;
+});
+
+// configure express global error handler
+app.use((err, req, res, next) => {
+  res.status(err.code || 500);
+  console.log("global error handling ", err.message )
+  res.json({ message: err.message || 'An unknown error occurred!' });
+});
 
 
 

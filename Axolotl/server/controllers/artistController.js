@@ -1,5 +1,10 @@
 const artistController = {};
 
+artistController.saveArtist = async (req, res, next) => {
+  console.log("saveArtist")
+  return next();
+};
+
 artistController.getAllArtists = async (req, res, next) => {
   console.log("getAllArtists")
   return next();
