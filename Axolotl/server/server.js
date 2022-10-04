@@ -46,8 +46,8 @@ app.post('/api/saveUser', userController.saveUser, (req, res) => {
 // LOGIN
 app.post('/api/login', userController.loginUser, (req, res, next) => {
   //authenticate user or artist with email
-  return res.status(200).json({ has_account: res.locals.doesUserExist });
-})
+  return res.status(200).json({ has_account: res.locals.doesUserExist, isArtist: res.locals.isArtist });
+});
 
 
 // get categories (for the dropdown) (have artist and category tables joint)
@@ -88,7 +88,7 @@ app.get('/api/artists', artistController.getAllArtists, (req, res) => {
   //post request, time slot, user id, artist id will be passed through request body
 app.post('/api/booking', bookingController.createBooking, (req, res) => {
   // create a booking in booking table
-  return res.status(200).json('api/booking');
+  return res.status(200).json({ newBooking: res.locals.newBooking });
 })
 
 app.get('/api/booking', bookingController.getBookings, (req, res) => {

@@ -54,6 +54,7 @@ userController.loginUser = async (req, res, next) => {
     const emailUserLookup = await db.query(checkUser, [email, password]);
     if (emailUserLookup.rows[0]) {
       res.locals.doesUserExist = true;
+      res.locals.isArtist = false;
     } else {
         // checking if an ARTIST w/ such credentials exists
       const checkArtist = `
@@ -64,8 +65,10 @@ userController.loginUser = async (req, res, next) => {
       const emailArtistLookup = await db.query(checkArtist, [email, password]);
       if (emailArtistLookup.rows[0]) {
         res.locals.doesUserExist = true;
+        res.locals.isArtist = true;
       } else {
         res.locals.doesUserExist = false;
+        res.locals.isArtist = false;
       }
     }
     return next();
