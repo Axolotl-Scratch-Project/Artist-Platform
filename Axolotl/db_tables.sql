@@ -32,7 +32,8 @@
   CREATE TABLE portfolios (
     id SERIAL PRIMARY KEY,
     artist_id INTEGER NOT NULL REFERENCES artists(id) ON DELETE CASCADE,
-    bio VARCHAR(400)
+    bio VARCHAR(400),
+    profile_image_url VARCHAR(400)
   );
 
   CREATE TABLE urls (
