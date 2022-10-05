@@ -6,6 +6,7 @@ const db = require('./models/database');
 const userController = require('./controllers/userController');
 const artistController = require('./controllers/artistController');
 const bookingController = require('./controllers/bookingController');
+const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 
 
 const dotenv = require('dotenv');
@@ -48,12 +49,13 @@ app.post('/api/login', userController.loginUser, (req, res) => {
   //join user and artist table
   //authenticate user with email
   //login user
+  // {userType: artist}
   return res.status(200);
 })
 
 
 // get categories (for the dropdown) (have artist and category tables joint)
-  // 
+  //
 // app.get('/api/categories', artistController.showCategories, (req, res) => {
 //   // return all category names from the db, expand in the dropdown
 // })
@@ -70,7 +72,7 @@ app.post('/api/login', userController.loginUser, (req, res) => {
 
 //user search
   // get request, filter condition will be passed through request body
-    // depends on 
+    // depends on
 // app.get('/api/search', artistController.queryOnSeachCriteria, (req, res) => {
 //   //search criteria will be passed through request params
 // });
@@ -78,7 +80,7 @@ app.post('/api/login', userController.loginUser, (req, res) => {
 
 //backend send a full list of artist
 app.get('/api/artists', artistController.getAllArtists, (req, res) => {
-  return res.status(200).json();
+  return res.status(200).json(res.locals.artists);
 })
 
 
@@ -115,13 +117,45 @@ app.get('api/profile/:/artist/links', artistController.getPortfolioLinks, (req, 
   // display all URLs on artists's portfolio
   return res.status(200);
 });
-  
+
 
 
 app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
 });
 
+
+//Stripe API
+app.post('/api/checkout', async(req, res) => {
+  //get artistid from booking controller
+  const artistRate = req.body.hourly_rate;
+  const hours = req.body.hours;
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: { name: 'artist_booking'},
+            // unit_amount: artistRate * 100,
+            unit_amount: 50 * 100,
+          },
+          // quantity: hours,
+          quantity: 1,
+        }
+      ],
+      success_url:`${process.env.SERVER_URL}/bookings.html`,
+      cancel_url:`${process.env.SERVER_URL}/home.html`,
+    })
+    res.json({ url: session.url })
+    console.log(res.json({ url: session.url }))
+  } catch(e) {
+    res.status(500).json({error: e.message});
+  }
+
+})
 
 
 
