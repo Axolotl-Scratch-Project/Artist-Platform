@@ -1,11 +1,13 @@
 import { useState } from 'react';
-// import Grid from '@mui/material/Grid';
 import { Grid , Paper, Avatar, Typography, TextField, Button } from '@mui/material';
+import { Navigate } from "react-router-dom";
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
+import axios from 'axios';
 
 
 const defaultField = {
   displayName: '',
+  loc: '',
   email: '',
   password: '',
   confirmPassword: '',
@@ -18,7 +20,7 @@ const Signup = () => {
   const userStyle = {margin: '18px auto'};
 
   const [formField, setFormField] = useState(defaultField);
-  const { displayName, email, password, confirmPassword } = formField;
+  const { displayName, loc, email, password, confirmPassword } = formField;
   const [ userType, setUserType] = useState('');
 
   const submitHandler = async (event) => {
@@ -27,9 +29,20 @@ const Signup = () => {
       alert('Passwords do not match!')
       return
     }
-    if(userType === 'Artist') return //save info to artist table, redirect to fill in artist info page
-    if (userType === 'Individual') return //save info to user table, redirect to main
-
+    if(userType === 'Artist') {
+      axios.post('/api/saveArtist', formField).then(res => {
+        //save info to artist table, redirect to fill in artist info page
+        //do something about response object
+        <Navigate to="/home-artist" replace={true} />
+      })
+    }
+    if (userType === 'Individual') {
+      axios.post('api/saveUser', formField).then(res => {
+        //save info to individual table, redirect to fill in artist info page
+        //do something about response object
+        <Navigate to="/home-individual" replace={true} />
+      })
+    }
   };
 
   const changeHandler = (event) => {
@@ -60,6 +73,14 @@ const Signup = () => {
           onChange = {changeHandler}
           name = 'displayName'
           value = {displayName}
+        />
+        <TextField fullWidth
+          variant = 'standard'
+          label = 'Location'
+          required
+          onChange = {changeHandler}
+          name = 'loc'
+          value = {loc}
         />
         <TextField fullWidth
           variant = 'standard'
