@@ -78,7 +78,7 @@ app.post('/api/login', userController.loginUser, (req, res) => {
 
 //backend send a full list of artist
 app.get('/api/artists', artistController.getAllArtists, (req, res) => {
-  return res.status(200).json();
+  return res.status(200).json(res.locals.artists);
 })
 
 
