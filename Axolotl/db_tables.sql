@@ -33,12 +33,14 @@
     id SERIAL PRIMARY KEY,
     artist_id INTEGER NOT NULL REFERENCES artists(id) ON DELETE CASCADE,
     bio VARCHAR(400),
-    profile_image_url VARCHAR(400)
+    profile_image_url VARCHAR(400),
+    homepage_url VARCHAR(400)
   );
 
   CREATE TABLE urls (
     id SERIAL PRIMARY KEY,
-    text VARCHAR(200),
+    gallerypiece_url VARCHAR(400),
+    gallerypiece_text VARCHAR(400),
     portfolios_id INTEGER NOT NULL REFERENCES portfolios(id) ON DELETE CASCADE
   );
 

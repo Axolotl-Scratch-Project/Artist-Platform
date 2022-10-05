@@ -9,12 +9,13 @@ const bookingController = require('./controllers/bookingController');
 
 
 const dotenv = require('dotenv');
+const { getPortfolioGalleryLinks } = require('./controllers/artistController');
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
 const port = process.env.PORT || 3000;
 
@@ -84,39 +85,39 @@ app.get('/api/artists', artistController.getAllArtists, (req, res) => {
 
 // booking (user / artist)
   //post request, time slot, user id, artist id will be passed through request body
-app.post('api/booking', bookingController.createBooking, (req, res) => {
+app.post('/api/booking', bookingController.createBooking, (req, res) => {
   // create a booking in booking table
   return res.status(200).json('api/booking');
 })
 
-app.get('api/booking', bookingController.getBookings, (req, res) => {
+app.get('/api/booking', bookingController.getBookings, (req, res) => {
   // display bookings
   return res.status(200).json('api/booking');
 });
 
 
 // ARTIST STUFF and PROFILES
-app.post('api/profile/:artist', artistController.createProfile, (req, res) => {
+// TODO
+app.post('/api/profile/artist', artistController.createProfile, (req, res) => {
   // create artist profile
   return res.status(200).json('api/artist');
 });
 
-app.get('api/profile/:artist', artistController.getProfile, (req, res) => {
+app.get('/api/profile/artist', artistController.getProfile, artistController.getPortfolioGalleryLinks, (req, res) => {
   // display artist profile
-  return res.status(200);
+  return res.status(200).json(res.locals);
 });
 
-app.put('api/profile/:artist', artistController.editProfile, (req, res) => {
+// TODO
+app.put('/api/profile/artist', artistController.editProfile, (req, res) => {
   // edit artist profile
   return res.status(200);
 })
 
-app.get('api/profile/:/artist/links', artistController.getPortfolioLinks, (req, res) => {
+app.get('/api/profile/artist/links', artistController.getPortfolioGalleryLinks, (req, res) => {
   // display all URLs on artists's portfolio
-  return res.status(200);
+  return res.status(200).json(res.locals.artistGalleryLinks);
 });
-  
-
 
 app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
