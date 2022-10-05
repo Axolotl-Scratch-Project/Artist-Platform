@@ -2,7 +2,7 @@ import React,{useState, useEffect} from 'react'
 import Post from './Post'
 import Axios from 'axios'
 import SideBar2 from '../component/SideBar2'
-import { Box,Stack,Grid } from '@mui/material';
+import { Box,Stack,Grid, Button } from '@mui/material';
 
 
 
@@ -21,13 +21,16 @@ const fakedata =[{id:'1',
 const defaultValues = {
   name: "",
   os: "",
-  priceRange: [0,110],
+  priceRange: [0,2000],
 };
 
 const Feed = () => {
   // const [artistInfor, setartistInfor] =useState([])
-  const [data, setdata] =useState(fakedata)
-  const [value, setValue]=useState(0)
+  const [superData, setSuperData] =useState([])
+
+  const [data, setdata] =useState([])
+  const [value, setValue]=useState(0) 
+
 
 
   const [formValues, setFormValues] = useState(defaultValues);
@@ -47,26 +50,33 @@ const Feed = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log(formValues);
+
+    let newData = superData.filter(element =>  element.hourly_rate > formValues.priceRange[0] && element.hourly_rate < formValues.priceRange[1])
+    setdata(
+      newData
+     )
   };
   
   function valuetext(formValues) {
     return {formValues};
   }
 
+  useEffect(()=>{
+    Axios.get('http://localhost:8080/api/artists').then((data) => {
+      setdata(data.data)
+      setSuperData(data.data);
+    })
+  },[])
+ 
+
+
   // useEffect(() => {
   //   datax.filter(element =>  element.bookingrate > formValues.priceRange[0])
   // },[]);
   
-  const clicker = (event) => {
-    let newValue = value + 1 
-    event.preventDefault();
-    setValue(newValue)
-    console.log("clicked")
-  };
 
   return (
     <div>
-      <button onClick={()=>clicker()}>{value}</button>
       <Grid container spacing={2} columns={10}>
           <Grid item xs={4}>
             <SideBar2 handleInputChange = {handleInputChange} 
@@ -80,8 +90,8 @@ const Feed = () => {
                 return <Post name = {data[0].name} bio = {data[0].bio} bookingrate = {data[0].bookingrate} genre ={data[0].genre}/>
             }} */}
 
-            { data.filter(element =>  element.bookingrate > formValues.priceRange[0]).map((element,index) => {
-                return <Post key = {index} name = {element.name} bio = {element.bio} bookingrate = {element.bookingrate} genre ={element.genre}/>
+            { data.map((element,index) => {
+                return <Post key = {index} name = {element.name} bio = {element.bio} bookingrate = {element.hourly_rate} genre ={element.categories_array}/>
             })}
 
           </Grid>

@@ -125,7 +125,7 @@ const SideBar2 = (props) => {
               valueLabelDisplay="auto"
               getAriaValueText={props.valuetext}
               min={10}
-              max={150}
+              max={2000}
             />
           </div>
         </Grid>
