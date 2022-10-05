@@ -1,3 +1,4 @@
+const e = require('express');
 const db = require('../models/database');
 
 const bookingController = {};
@@ -13,17 +14,18 @@ bookingController.createBooking = async (req, res, next) => {
     const availabilityCheck = ``;
 
     // create CUSTOMER - artist booking
-    console.log("bookingController -> createBooking", bookingStart, new Date(bookingStart), bookingEnd, new Date(bookingEnd))
-    console.log("date diff", new Date(bookingEnd) - new Date(bookingStart), typeof (new Date(bookingEnd) - new Date(bookingStart)));
+    // console.log("bookingController -> createBooking", bookingStart, new Date(bookingStart), bookingEnd, new Date(bookingEnd))
+    // console.log("date diff", new Date(bookingEnd) - new Date(bookingStart), typeof (new Date(bookingEnd) - new Date(bookingStart)));
+    // can add amount * HOURLY RATE but we are not displaying that info anywhere yet
     const amount = (new Date(bookingEnd) - new Date(bookingStart)) / 3600000;
-    const createBooking = `
+    const createBookingQuery = `
       INSERT INTO bookings (booker_id, booker_type, artist_id, amount, booking_start, booking_end)
       VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING *
     `;
-    console.log([bookerId, bookerType, artistId, amount, bookingStart, bookingEnd])
-    const newBooking = await db.query(createBooking, [bookerId, bookerType, artistId, amount, bookingStart, bookingEnd]);
-    console.log("bookingController -> createBooking -> newBooking.rows[0]", newBooking.rows[0])
+    // console.log([bookerId, bookerType, artistId, amount, bookingStart, bookingEnd]);
+    const newBooking = await db.query(createBookingQuery, [bookerId, 'user', artistId, amount, bookingStart, bookingEnd]);
+    // console.log("bookingController -> createBooking -> newBooking.rows[0]", newBooking.rows[0])
     res.locals.newBooking = newBooking.rows[0];
     return next();
   } catch (err) {
@@ -34,7 +36,20 @@ bookingController.createBooking = async (req, res, next) => {
 bookingController.getBookings = async (req, res, next) => {
   console.log('bookingController.getBookings invoked');
   try {
-
+    const { bookerId, bookerType } = req.body;
+    const bookingsByUserIdQuery = `
+      select *
+      from bookings as b
+      where b.booker_id = $1 and b.booker_type = $2
+    `;
+    let bookingsByUserId;
+    if (bookerType === 'artist') {
+      bookingsByUserId = await db.query(bookingsByUserIdQuery, [bookerId, 'artist']);
+    } else {
+      bookingsByUserId = await db.query(bookingsByUserIdQuery, [bookerId, 'user']);
+    }
+    res.locals.bookingsByUser = bookingsByUserId.rows;
+    return next();
   } catch (err) {
     return next(err);
   }

@@ -44,6 +44,7 @@
 
   CREATE TABLE bookings (
     id SERIAL PRIMARY KEY,
+    -- user_id INTEGER NOT NULL REFERENCES users(id),
     booker_id INTEGER NOT NULL,
     booker_type VARCHAR(50) NOT NULL,
     artist_id INTEGER NOT NULL REFERENCES artists(id),

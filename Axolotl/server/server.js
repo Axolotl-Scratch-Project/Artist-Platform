@@ -93,7 +93,7 @@ app.post('/api/booking', bookingController.createBooking, (req, res) => {
 
 app.get('/api/booking', bookingController.getBookings, (req, res) => {
   // display bookings
-  return res.status(200).json('api/booking');
+  return res.status(200).json({ bookingsByUser: res.locals.bookingsByUser });
 });
 
 
