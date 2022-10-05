@@ -13,13 +13,11 @@ const ArtistBio = (props) => {
         
     }
     return (
-
         <Typography
             sx={{
                 display: 'flex',
                 justifyContent: 'center',
                 h5: 'h5'
-
             }}
         >
             {bio}
