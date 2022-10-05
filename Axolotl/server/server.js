@@ -85,14 +85,14 @@ app.post('/api/login', userController.loginUser, (req, res, next) => {
 // });
 
 app.post('/api/saveArtist', artistController.saveArtist, (req, res) => {
-  return res.status(200).json();
+  return res.status(200).json({ artistData: res.locals.artistData });
 })
 
 
 //backend send a full list of artist
 app.get('/api/artists', artistController.getAllArtists, (req, res) => {
   return res.status(200).json(res.locals.artists);
-})
+});
 
 
 // ARTIST STUFF and PROFILES
