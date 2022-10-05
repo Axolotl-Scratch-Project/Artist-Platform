@@ -31,7 +31,6 @@ const port = process.env.PORT || 3000;
 // WE NEED SPECIFIC NAMES / URIs
 // get/post/patch...
 
-console.log(userController);
 app.post('/api/test', (req, res) => {
   console.log("TEST");
   res.json("xd")
@@ -48,6 +47,17 @@ app.post('/api/login', userController.loginUser, (req, res, next) => {
   //authenticate user or artist with email
   return res.status(200).json({ has_account: res.locals.doesUserExist, isArtist: res.locals.isArtist });
 });
+
+// BOOKINGS
+  app.post('/api/booking', bookingController.createBooking, (req, res) => {
+    // create a booking in booking table
+    return res.status(200).json({ newBooking: res.locals.newBooking });
+  })
+  
+  app.get('/api/booking', bookingController.getBookings, (req, res) => {
+    // display bookings
+    return res.status(200).json({ bookingsByUser: res.locals.bookingsByUser });
+  });
 
 
 // get categories (for the dropdown) (have artist and category tables joint)
@@ -82,19 +92,6 @@ app.post('/api/saveArtist', artistController.saveArtist, (req, res) => {
 app.get('/api/artists', artistController.getAllArtists, (req, res) => {
   return res.status(200).json();
 })
-
-
-// booking (user / artist)
-  //post request, time slot, user id, artist id will be passed through request body
-app.post('/api/booking', bookingController.createBooking, (req, res) => {
-  // create a booking in booking table
-  return res.status(200).json({ newBooking: res.locals.newBooking });
-})
-
-app.get('/api/booking', bookingController.getBookings, (req, res) => {
-  // display bookings
-  return res.status(200).json({ bookingsByUser: res.locals.bookingsByUser });
-});
 
 
 // ARTIST STUFF and PROFILES

@@ -1,4 +1,3 @@
-const e = require('express');
 const db = require('../models/database');
 
 const bookingController = {};
@@ -12,12 +11,19 @@ bookingController.createBooking = async (req, res, next) => {
     const { bookerId, bookerType, artistId, bookingStart, bookingEnd } = req.body;
     // search for whether an overlapping booking exists
     const availabilityCheck = ``;
+    const artistHourlyQuery = `
+    select artists.hourly_rate
+    from artists
+    where artists.id = $1
+    `;
+    const artistHourly = await db.query(artistHourlyQuery, [artistId]);
 
     // create CUSTOMER - artist booking
     // console.log("bookingController -> createBooking", bookingStart, new Date(bookingStart), bookingEnd, new Date(bookingEnd))
     // console.log("date diff", new Date(bookingEnd) - new Date(bookingStart), typeof (new Date(bookingEnd) - new Date(bookingStart)));
     // can add amount * HOURLY RATE but we are not displaying that info anywhere yet
-    const amount = (new Date(bookingEnd) - new Date(bookingStart)) / 3600000;
+    const amount = (new Date(bookingEnd) - new Date(bookingStart)) / 3600000 * artistHourly.rows[0]['hourly_rate'];
+    console.log("hourly", artistHourly, amount);
     const createBookingQuery = `
       INSERT INTO bookings (booker_id, booker_type, artist_id, amount, booking_start, booking_end)
       VALUES ($1, $2, $3, $4, $5, $6)
