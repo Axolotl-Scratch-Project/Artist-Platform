@@ -14,22 +14,18 @@ artistController.saveArtist = async (req, res, next) => {
     where email = $1
   `;
   const artistExistenceCheck = await db.query(artistExistenceCheckerQuery, [email]);
-  console.log("artistController -> artistUser -> artistExistenceCheck", artistExistenceCheck.rows)
   if ( artistExistenceCheck.rowCount > 0 ) {
     throw new Error ('A user with this email already exists');
   } else {
-    // creating a new user in the DB
+    // creating a new artist in the DB
     const createUserQuery = `
       INSERT INTO artists (email, name, password, location)
       VALUES ($1, $2, $3, $4)
       RETURNING *
     `;
-    // const createUser = `
-    // select *
-    // from users
-    // `
     const newUser = await db.query(createUserQuery, [email, displayName, password, loc]);
     res.locals.artistData = newUser.rows[0];
+    // create a new portfolio
     const createPortfolioQuery = `
       INSERT INTO portfolios (artist_id)
       values ($1)
