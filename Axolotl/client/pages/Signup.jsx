@@ -40,7 +40,7 @@ const Signup = () => {
       axios.post('api/saveUser', formField).then(res => {
         //save info to individual table, redirect to fill in artist info page
         //do something about response object
-        <Navigate to="/home-individual" replace={true} />
+        <Navigate to="/home" replace={true} />
       })
     }
   };
