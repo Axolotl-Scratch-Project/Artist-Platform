@@ -57,15 +57,11 @@ artistController.getAllArtists = (req, res, next) => {
     })
 };
 
-// artistController.createProfile = async (req, res, next) => {
-//   console.log("createProfile")
-//   return next();
-// };
 
 artistController.getProfile = (req, res, next) => {
   console.log("getProfile")
   const id = req.query.id;
-  const query = `SELECT artists.id as artist_id, artists.name, artists.email, artists.location, artists.hourly_rate, portfolios.bio, portfolios.profile_image_url, portfolios.homepage_url, artcat.categories_array
+  const query = `SELECT artists.id as artist_id, artists.name, artists.email, artists.location, artists.hourly_rate, portfolios.bio, portfolios.profile_image_url, portfolios.homepage_url, portfolios.id as portfolio_id, artcat.categories_array
   FROM artists
   JOIN portfolios ON artists.id = portfolios.artist_id
   JOIN (
@@ -83,16 +79,64 @@ artistController.getProfile = (req, res, next) => {
   })
 };
 
+
 artistController.editProfile = async (req, res, next) => {
-  const {name} = req.body.name;
-  console.log("editProfile")
-  return next();
+  console.log('req.query', req.query)
+  const { artist_id, name, email, location, hourly_rate, bio, profile_image_url, homepage_url, portfolio_id, categories_array } = req.body.artistProfile;
+  const artistGalleryLinks = req.body.artistGalleryLinks;
+  // console.log('artistGalleryLinks', artistGalleryLinks)
+
+  const query = `
+    BEGIN;
+    UPDATE portfolios
+    SET bio = '${bio}',
+    profile_image_url = '${profile_image_url}',
+    homepage_url = '${homepage_url}'
+    WHERE artist_id = ${artist_id};
+    
+    UPDATE artists
+    SET hourly_rate = '${hourly_rate}',
+    location = '${location}'
+    WHERE id = ${artist_id};
+
+    DELETE FROM urls WHERE portfolios_id = ${portfolio_id};
+
+    COMMIT;
+    `;
+
+    console.log("editProfile")
+
+    try {
+      // update main profile info
+      const result = await db.query(query);
+
+      // add updated gallery links
+      for (let i = 0; i < artistGalleryLinks.length; i++) {
+        const currentPiece = artistGalleryLinks[i];
+        // console.log('currentpiece', currentPiece)
+        const query2 = `
+          INSERT INTO urls (portfolios_id, gallerypiece_url, gallerypiece_text)
+          VALUES (${portfolio_id}, '${currentPiece.gallerypiece_url}', '${currentPiece.gallerypiece_text}');
+        `
+        const result2 = await db.query(query2);
+        // console.log('result2', result2)
+      }
+
+      req.query.id = artist_id;
+      // console.log('req.query.id', req.query.id)
+      return next();
+
+    } catch (error) {
+      console.error('error in artistController.editProfile:', error);
+      return next(error);
+    }
 };
+
 
 artistController.getPortfolioGalleryLinks = async (req, res, next) => {
   console.log("getPortfolioLinks")
   const id = req.query.id;
-  const query = `SELECT artists.id as artist_id, urls.id as galleryPiece_id, urls.gallerypiece_url, urls.gallerypiece_text
+  const query = `SELECT artists.id as artist_id, urls.id as galleryPiece_id, urls.gallerypiece_url, urls.gallerypiece_text, urls.portfolios_id as portfolio_id
   FROM portfolios
   JOIN artists
   ON portfolios.artist_id = artists.id

@@ -110,16 +110,16 @@ app.get('/api/profile/artist', artistController.getProfile, artistController.get
 });
 
 // TODO
-app.put('/api/profile/artist', artistController.editProfile, (req, res) => {
+app.put('/api/profile/artist', artistController.editProfile, artistController.getProfile, artistController.getPortfolioGalleryLinks, (req, res) => {
   // edit artist profile
-  return res.status(200);
+  return res.status(200).json(res.locals);
 })
 
 // Not being used right now. Sending galleryLinks with /api/profile/artist
-// app.get('/api/profile/artist/links', artistController.getPortfolioGalleryLinks, (req, res) => {
-//   // display all URLs on artists's portfolio
-//   return res.status(200).json(res.locals.artistGalleryLinks);
-// });
+app.get('/api/profile/artist/links', artistController.getPortfolioGalleryLinks, (req, res) => {
+  // display all URLs on artists's portfolio
+  return res.status(200).json(res.locals.artistGalleryLinks);
+});
 
 app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
