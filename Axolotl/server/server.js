@@ -7,6 +7,8 @@ const userController = require('./controllers/userController');
 const artistController = require('./controllers/artistController');
 const bookingController = require('./controllers/bookingController');
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
+const cookieParser = require('cookie-parser');
+
 
 
 const dotenv = require('dotenv');
@@ -17,6 +19,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 // app.use(bodyParser.json());
 const port = process.env.PORT || 3000;
 
@@ -40,13 +43,24 @@ app.post('/api/test', (req, res) => {
 // SIGNUP
 app.post('/api/saveUser', userController.saveUser, (req, res) => {
   //save user/artist in corresponding database
-  return res.status(200).json({ newUserData: res.locals.userData });
+  return res.status(200).send({ newUserData: res.locals.userData });
 });
 
 // LOGIN
 app.post('/api/login', userController.loginUser, (req, res, next) => {
   //authenticate user or artist with email
   return res.status(200).json({ has_account: res.locals.doesUserExist, isArtist: res.locals.isArtist, userId: res.locals.userId, userType: res.locals.userType });
+});
+
+app.get('/api/logout', (req, res) => {
+  res
+    .cookie("token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+      secure: true,
+      sameSite: "none",
+    })
+    .send();
 });
 
 // BOOKINGS
