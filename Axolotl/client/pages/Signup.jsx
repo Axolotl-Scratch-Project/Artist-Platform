@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Grid , Paper, Avatar, Typography, TextField, Button } from '@mui/material';
-import { Navigate } from "react-router-dom";
+import { useNavigate, redirect, Link } from "react-router-dom";
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
 import axios from 'axios';
 
@@ -22,25 +22,24 @@ const Signup = () => {
   const [formField, setFormField] = useState(defaultField);
   const { displayName, loc, email, password, confirmPassword } = formField;
   const [ userType, setUserType] = useState('');
+  const navigate = useNavigate();
 
   const submitHandler = async (event) => {
     event.preventDefault();
-    if(password !== confrimPassword) {
+    if(password !== confirmPassword) {
       alert('Passwords do not match!')
       return
     }
     if(userType === 'Artist') {
       axios.post('/api/saveArtist', formField).then(res => {
-        //save info to artist table, redirect to fill in artist info page
-        //do something about response object
-        <Navigate to="/home-artist" replace={true} />
+        //need to redirect to diff home page based on user type- waiting on Raymond's main page
+        navigate("/signup/redirect");
       })
     }
     if (userType === 'Individual') {
       axios.post('api/saveUser', formField).then(res => {
-        //save info to individual table, redirect to fill in artist info page
-        //do something about response object
-        <Navigate to="/home" replace={true} />
+        //need to redirect to diff home page based on user type- waiting on Raymond's main page
+        navigate("/signup/redirect");
       })
     }
   };
@@ -52,7 +51,7 @@ const Signup = () => {
 
   const userHandler = (event) => {
     setUserType(event.target.value);
-    console.log(event.target.value);
+    // console.log(event.target.value);
   }
 
 
