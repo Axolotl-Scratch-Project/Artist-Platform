@@ -47,7 +47,8 @@ const Feed = () => {
        );
     } else if (name === 'category') {
       console.log(value)
-      let newData = superData.filter(element =>  element.categories_array[0].toLowerCase().includes(value.toLowerCase()))
+      let newData = value ==='All'||'' ? superData: superData.filter(element =>  element.categories_array.includes(value))
+      // let newData = superData.filter(element =>  element.categories_array.includes(value))
       setdata(
         newData
        );
@@ -63,14 +64,14 @@ const Feed = () => {
       newData
      );
   };
-  const handleSubmit = (event) => {
-    event.preventDefault();
+  // const handleSubmit = (event) => {
+  //   event.preventDefault();
 
-    let newData = superData.filter(element =>  element.hourly_rate > formValues.priceRange[0] && element.hourly_rate < formValues.priceRange[1])
-    setdata(
-      newData
-     )
-  };
+  //   let newData = superData.filter(element =>  element.hourly_rate > formValues.priceRange[0] && element.hourly_rate < formValues.priceRange[1])
+  //   setdata(
+  //     newData
+  //    )
+  // };
   
   function valuetext(formValues) {
     return {formValues};
@@ -97,7 +98,7 @@ const Feed = () => {
           <Grid item xs={4}>
             <SideBar2 handleInputChange = {handleInputChange} 
                       handleSliderChange = {handleSliderChange}
-                      handleSubmit = {handleSubmit}
+                      // handleSubmit = {handleSubmit}
                       formValues = {formValues}
                       valuetext = {valuetext}/>
           </Grid>
@@ -107,7 +108,7 @@ const Feed = () => {
             }} */}
 
             { data.map((element,index) => {
-                return <Post key = {index} name = {element.name} bio = {element.bio} bookingrate = {element.hourly_rate} genre ={element.categories_array[0]} id = {element.artist_id}/>
+                return <Post key = {index} name = {element.name} bio = {element.bio} bookingrate = {element.hourly_rate} category ={element.categories_array} id = {element.artist_id}/>
             })}
 
           </Grid>
