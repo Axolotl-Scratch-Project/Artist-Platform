@@ -1,4 +1,7 @@
 const db = require('../models/database');
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
 
 const artistController = {};
 
@@ -19,23 +22,38 @@ artistController.saveArtist = async (req, res, next) => {
     throw new Error ('A user with this email already exists');
   } else {
     // creating a new user in the DB
-    const createUserQuery = `
+    const createArtistQuery = `
       INSERT INTO artists (email, name, password, location)
       VALUES ($1, $2, $3, $4)
       RETURNING *
     `;
-    // const createUser = `
-    // select *
-    // from users
-    // `
-    const newUser = await db.query(createUserQuery, [email, displayName, password, loc]);
-    res.locals.artistData = newUser.rows[0];
+    // create a bcrypt hash
+    const salt = await bcrypt.genSalt();
+    const passwordHash = await bcrypt.hash(password.toString(), salt);
+    const newArtist = await db.query(createArtistQuery, [email, displayName, passwordHash, loc]);
+    // create a JWT token
+    const token = jwt.sign(
+      {
+        user: newArtist.rows[0].id,
+        usertype: 'artist'
+      },
+      process.env.JWT_SECRET
+    );
+    // create a cookie w/ JWT token
+    res
+    .cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+    res.locals.artistData = newArtist.rows[0];
+    // create an artist portfolio
     const createPortfolioQuery = `
       INSERT INTO portfolios (artist_id)
       values ($1)
       RETURNING *
     `;
-    const newPortfolio = await db.query(createPortfolioQuery, [newUser.rows[0].id]);
+    const newPortfolio = await db.query(createPortfolioQuery, [newArtist.rows[0].id]);
   }
   return next();
   } catch (err) {

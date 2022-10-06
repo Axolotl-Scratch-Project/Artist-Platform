@@ -62,9 +62,9 @@ userController.loginUser = async (req, res, next) => {
     const checkUserQuery = `
       select *
       from users
-      where users.email = $1 and users.password = $2
+      where users.email = $1
     `;
-    const emailUserLookup = await db.query(checkUserQuery, [email, password]);
+    const emailUserLookup = await db.query(checkUserQuery, [email]);
     // check if such a user exists
     if (emailUserLookup.rows[0]) {
       // compare passed in password w/ hashed password in DB
@@ -100,9 +100,9 @@ userController.loginUser = async (req, res, next) => {
       const checkArtistQuery = `
         select *
         from artists
-        where artists.email = $1 and artists.password = $2
+        where artists.email = $1
       `;
-      const emailArtistLookup = await db.query(checkArtistQuery, [email, password]);
+      const emailArtistLookup = await db.query(checkArtistQuery, [email]);
       console.log(emailArtistLookup.rows[0])
       if (emailArtistLookup.rows[0]) {
               // compare passed in password w/ hashed password in DB

@@ -50,6 +50,7 @@ app.post('/api/login', userController.loginUser, (req, res, next) => {
   return res.status(200).json({ has_account: res.locals.doesUserExist, isArtist: res.locals.isArtist, userId: res.locals.userId, userType: res.locals.userType });
 });
 
+// LOGOUT
 app.get('/api/logout', (req, res) => {
   res
     .cookie("token", "", {
