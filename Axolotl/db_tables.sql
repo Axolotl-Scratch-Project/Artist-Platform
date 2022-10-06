@@ -32,19 +32,24 @@
   CREATE TABLE portfolios (
     id SERIAL PRIMARY KEY,
     artist_id INTEGER NOT NULL REFERENCES artists(id) ON DELETE CASCADE,
-    bio VARCHAR(400)
+    bio VARCHAR(400),
+    profile_image_url VARCHAR(400),
+    homepage_url VARCHAR(400)
   );
 
   CREATE TABLE urls (
     id SERIAL PRIMARY KEY,
-    text VARCHAR(200),
+    gallerypiece_url VARCHAR(400),
+    gallerypiece_text VARCHAR(400),
     portfolios_id INTEGER NOT NULL REFERENCES portfolios(id) ON DELETE CASCADE
   );
 
 
   CREATE TABLE bookings (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL REFERENCES users(id),
+    -- user_id INTEGER NOT NULL REFERENCES users(id),
+    booker_id INTEGER NOT NULL,
+    booker_type VARCHAR(50) NOT NULL,
     artist_id INTEGER NOT NULL REFERENCES artists(id),
     amount INTEGER NOT NULL, 
     booking_start TIMESTAMP WITH TIME ZONE NOT NULL,

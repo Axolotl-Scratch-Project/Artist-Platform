@@ -78,6 +78,7 @@ const Feed = () => {
 
   useEffect(()=>{
     Axios.get('http://localhost:8080/api/artists').then((data) => {
+      console.log("feed -> useEffect -> data", data)
       setdata(data.data)
       setSuperData(data.data);
     })
