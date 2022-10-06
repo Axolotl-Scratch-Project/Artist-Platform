@@ -45,12 +45,16 @@ artistController.getAllArtists = (req, res, next) => {
       res.locals.artists = data.rows;
       return next();
     })
+    .catch(error => {
+      console.error('error in artistController.getAllArtists:', error);
+      return next(error)
+    })
 };
 
-artistController.createProfile = async (req, res, next) => {
-  console.log("createProfile")
-  return next();
-};
+// artistController.createProfile = async (req, res, next) => {
+//   console.log("createProfile")
+//   return next();
+// };
 
 artistController.getProfile = (req, res, next) => {
   console.log("getProfile")
@@ -67,9 +71,14 @@ artistController.getProfile = (req, res, next) => {
     res.locals.artistProfile = data.rows[0];
     return next();
   })
+  .catch(error => {
+    console.error('error in artistController.getProfile:', error);
+    return next(error);
+  })
 };
 
 artistController.editProfile = async (req, res, next) => {
+  const {name} = req.body.name;
   console.log("editProfile")
   return next();
 };

@@ -88,6 +88,8 @@ app.post('/api/saveArtist', artistController.saveArtist, (req, res) => {
   return res.status(200).json({ artistData: res.locals.artistData });
 })
 
+// TODO send endpoint with all artist categories
+
 
 //backend send a full list of artist
 app.get('/api/artists', artistController.getAllArtists, (req, res) => {
@@ -96,11 +98,11 @@ app.get('/api/artists', artistController.getAllArtists, (req, res) => {
 
 
 // ARTIST STUFF and PROFILES
-// TODO
-app.post('/api/profile/artist', artistController.createProfile, (req, res) => {
-  // create artist profile
-  return res.status(200).json('api/artist');
-});
+// not currently needed. profile will automatically get created in /api/saveArtist
+// app.post('/api/profile/artist', artistController.createProfile, (req, res) => {
+//   // create artist profile
+//   return res.status(200).json('api/artist');
+// });
 
 app.get('/api/profile/artist', artistController.getProfile, artistController.getPortfolioGalleryLinks, (req, res) => {
   // display artist profile
@@ -113,10 +115,11 @@ app.put('/api/profile/artist', artistController.editProfile, (req, res) => {
   return res.status(200);
 })
 
-app.get('/api/profile/artist/links', artistController.getPortfolioGalleryLinks, (req, res) => {
-  // display all URLs on artists's portfolio
-  return res.status(200).json(res.locals.artistGalleryLinks);
-});
+// Not being used right now. Sending galleryLinks with /api/profile/artist
+// app.get('/api/profile/artist/links', artistController.getPortfolioGalleryLinks, (req, res) => {
+//   // display all URLs on artists's portfolio
+//   return res.status(200).json(res.locals.artistGalleryLinks);
+// });
 
 app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
