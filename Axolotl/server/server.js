@@ -35,7 +35,7 @@ const port = process.env.PORT || 3000;
 app.post('/api/test', (req, res) => {
   console.log("TEST");
   res.json("xd")
-}); 
+});
 
 // SIGNUP
 app.post('/api/saveUser', userController.saveUser, (req, res) => {
@@ -54,8 +54,10 @@ app.post('/api/login', userController.loginUser, (req, res, next) => {
     // create a booking in booking table
     return res.status(200).json({ newBooking: res.locals.newBooking });
   })
-  
-  app.get('/api/booking', bookingController.getBookings, (req, res) => {
+
+
+  //changed get request to post request to pass req.body, changed end point to differentiate above endpoint
+  app.post('/api/getBooking', bookingController.getBookings, (req, res) => {
     // display bookings
     return res.status(200).json({ bookingsByUser: res.locals.bookingsByUser });
   });
@@ -148,7 +150,7 @@ app.post('/api/checkout', async(req, res) => {
       cancel_url:`${process.env.SERVER_URL}/home.html`,
     })
     res.json({ url: session.url })
-    console.log(res.json({ url: session.url }))
+    // console.log(res.json({ url: session.url }))
   } catch(e) {
     res.status(500).json({error: e.message});
   }

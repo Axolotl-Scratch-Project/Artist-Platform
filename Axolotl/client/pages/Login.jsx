@@ -32,8 +32,8 @@ const Login = (props) => {
         'password': password
       })
     }
-    
-    const response = await fetch('http://localhost:3000/login/user', reqOptions)
+
+    const response = await fetch('http://localhost:3000/api/login', reqOptions)
     const data = await response.json();
     // console.log('data');
   };
@@ -59,7 +59,7 @@ const Login = (props) => {
             <h1>Login</h1>
           </Typography>
         </div>
-        <TextField 
+        <TextField
               name="email"
               type="text"
               placeholder='Enter your email'
@@ -67,7 +67,7 @@ const Login = (props) => {
               onChange={handleChange}
               value={email}
               />
-        <TextField 
+        <TextField
               name="password"
               type="password"
               placeholder='Enter your password'
