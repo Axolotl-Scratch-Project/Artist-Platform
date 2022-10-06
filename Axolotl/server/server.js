@@ -10,13 +10,13 @@ const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 
 
 const dotenv = require('dotenv');
-const { application } = require('express');
+
 dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 // app.use(bodyParser.json());
 const port = process.env.PORT || 3000;
 
@@ -96,27 +96,27 @@ app.get('/api/artists', artistController.getAllArtists, (req, res) => {
 
 
 // ARTIST STUFF and PROFILES
-app.post('/api/profile/:artist', artistController.createProfile, (req, res) => {
+// TODO
+app.post('/api/profile/artist', artistController.createProfile, (req, res) => {
   // create artist profile
   return res.status(200).json('api/artist');
 });
 
-app.get('/api/profile/:artist', artistController.getProfile, (req, res) => {
+app.get('/api/profile/artist', artistController.getProfile, artistController.getPortfolioGalleryLinks, (req, res) => {
   // display artist profile
-  return res.status(200);
+  return res.status(200).json(res.locals);
 });
 
-app.put('/api/profile/:artist', artistController.editProfile, (req, res) => {
+// TODO
+app.put('/api/profile/artist', artistController.editProfile, (req, res) => {
   // edit artist profile
   return res.status(200);
 })
 
-app.get('/api/profile/:artist/links', artistController.getPortfolioLinks, (req, res) => {
+app.get('/api/profile/artist/links', artistController.getPortfolioGalleryLinks, (req, res) => {
   // display all URLs on artists's portfolio
-  return res.status(200);
+  return res.status(200).json(res.locals.artistGalleryLinks);
 });
-
-
 
 app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
@@ -168,6 +168,8 @@ app.use((err, req, res, next) => {
   console.log("global error handling ", err.message )
   res.json({ message: err.message || 'An unknown error occurred!' });
 });
+
+
 
 
 
