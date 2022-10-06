@@ -107,7 +107,7 @@ const Feed = () => {
             }} */}
 
             { data.map((element,index) => {
-                return <Post key = {index} name = {element.name} bio = {element.bio} bookingrate = {element.hourly_rate} genre ={element.categories_array[0]} id = {element.id}/>
+                return <Post key = {index} name = {element.name} bio = {element.bio} bookingrate = {element.hourly_rate} genre ={element.categories_array[0]} id = {element.artist_id}/>
             })}
 
           </Grid>

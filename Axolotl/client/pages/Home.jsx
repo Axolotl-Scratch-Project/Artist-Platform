@@ -26,8 +26,8 @@ const Home = () => {
           </Grid> */}
 
         <Feed/>
-        <UserViewNav/>
-        <UserView/>
+        {/* <UserViewNav/>
+        <UserView/> */}
       </Box>
   )
 }

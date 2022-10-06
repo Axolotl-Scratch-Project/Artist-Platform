@@ -11,11 +11,15 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { Box } from '@mui/material';
+import { Axios } from 'axios';
+import { useNavigate } from "react-router-dom";
 
 var rightNow = new Date();
 var res = rightNow.toISOString().slice(0,16)
+console.log(localStorage);
 
 const Post = (props) => {
+  let navigate = useNavigate()
 
   const [showText, setShowText] = useState(false);
   const onClick = () => setShowText(!showText);
@@ -30,13 +34,22 @@ const Post = (props) => {
     setendTime(e.target.value);
   };
 
-  const onclick = (newValue) => {
-    const amount = (new Date(endTime) - new Date(startTime)) / 3600000 * props.bookingrate;    // setstartPrice(amount)
+  const onclick = async(e) => {
+    e.preventDefault()
+    const amount = Math.round((new Date(endTime) - new Date(startTime)) / 3600000 * props.bookingrate);    // setstartPrice(amount)
     setstartPrice(amount)
-    console.log({artistID:props.id,
-                 bookerType:2,
-                 bookingsStart:startTime,
-                 bookingsEnd:endTime})
+    // if(!localStorage.getItem(bookerId)) {
+    //   navigate('/signup')
+    // } else if (localStorage.getItem(bookerId)){
+    //   let infor = {artistID:props.id,
+    //     bookerId:localStorage.getItem(bookerId),
+    //     bookerType:localStorage.getItem(bookerType)
+    //     bookingsStart:startTime,
+    //     bookingsEnd:endTime,
+    //     hourly_rate:props.bookingrate}
+    // await Axios.post('http://localhost:8080/api/checkout',infor)
+    // }
+    console.log('hello')
   };
 
 
