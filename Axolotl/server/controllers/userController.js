@@ -150,23 +150,6 @@ userController.loginUser = async (req, res, next) => {
   }
 };
 
-userController.isLoggedIn = (req, res, next) => {
-  try {
-    const token = req.cookies.token;
-    if (!token) {
-      res.locals.user = '';
-      req.locals.userType = '';
-    } else {
-      const verified = jwt.verify(token, process.env.JWT_SECRET);
-      req.locals.user = verified.user;
-      req.locals.userType = verified.usertype;
-    }
-    return next();
-  } catch (err) {
-    return next(err);
-  }
-};
-
 
 module.exports = userController;
 
