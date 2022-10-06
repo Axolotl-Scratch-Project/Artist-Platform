@@ -7,10 +7,10 @@ const ArtistBio = (props) => {
     const [bio, setBio] = useState('Artist Bio')
 
     const submitBio = (event) =>{
-        
+
     }
     const updateBio = (event) =>{
-        
+
     }
     return (
         <Typography
@@ -22,7 +22,7 @@ const ArtistBio = (props) => {
         >
             {bio}
         </Typography>
-        
+
     )
 }
 export default ArtistBio;

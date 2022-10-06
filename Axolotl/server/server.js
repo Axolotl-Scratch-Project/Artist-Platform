@@ -46,7 +46,7 @@ app.post('/api/saveUser', userController.saveUser, (req, res) => {
 // LOGIN
 app.post('/api/login', userController.loginUser, (req, res, next) => {
   //authenticate user or artist with email
-  return res.status(200).json({ has_account: res.locals.doesUserExist, isArtist: res.locals.isArtist });
+  return res.status(200).json({ has_account: res.locals.doesUserExist, isArtist: res.locals.isArtist, userId: res.locals.userId, userType: res.locals.userType });
 });
 
 // BOOKINGS

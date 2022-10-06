@@ -34,7 +34,7 @@ const Post = (props) => {
     // setstartPrice(Math.abs(new Date(endTime) - new Date((startTime))))
     // setstartPrice(new Date(endTime))
   };
-  
+
 
   return (
     <div>
@@ -59,7 +59,7 @@ const Post = (props) => {
         </Typography>
       </CardContent>
       <CardContent style={{paddingTop:5, paddingBottom:0, display: 'flex', alignItems: 'center'}}>
-        <AttachMoneyIcon/> 
+        <AttachMoneyIcon/>
         <Typography variant="body2" color="text.secondary">
         {props.bookingrate}
         </Typography>
