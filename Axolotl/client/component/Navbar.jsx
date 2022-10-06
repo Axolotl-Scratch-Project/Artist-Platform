@@ -11,6 +11,7 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Directions } from '@mui/icons-material';
+import { useNavigate } from "react-router-dom";
 
 
 
@@ -83,6 +84,10 @@ const Navbar = () => {
     justifyContent:'space-between',
   })
 
+  const navigate = useNavigate();
+  const toComponent=(address)=>{
+    navigate('/'+ address);
+  }
 
   return (
     <div>
@@ -178,6 +183,7 @@ const Navbar = () => {
                 sx={{marginRight:'20px'}}
                 color='inherit'
                 id="basic-button"
+                onClick={()=> toComponent('signup')}
                 >
                 Signup
 
@@ -189,10 +195,10 @@ const Navbar = () => {
                 sx = {{marginLeft:'auto'}}
                 color='inherit'
                 id="basic-button"
-                aria-controls={open ? 'basic-menu' : undefined}
-                aria-haspopup="true"
-                aria-expanded={open ? 'true' : undefined}
-                onClick={handleClick}
+                // aria-controls={open ? 'basic-menu' : undefined}
+                // aria-haspopup="true"
+                // aria-expanded={open ? 'true' : undefined}
+                onClick={()=> toComponent('login')}
               >
                 Login
               </Button>

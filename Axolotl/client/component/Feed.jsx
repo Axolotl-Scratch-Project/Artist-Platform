@@ -20,7 +20,7 @@ const fakedata =[{id:'1',
 
 const defaultValues = {
   name: "",
-  os: "",
+  category: "",
   priceRange: [0,2000],
 };
 
@@ -40,16 +40,31 @@ const Feed = () => {
       ...formValues,
       [name]: value,
     });
+    if(name === 'name') {
+      let newData = superData.filter(element =>  element.name.toLowerCase().includes(value.toLowerCase()))
+      setdata(
+        newData
+       );
+    } else if (name === 'category') {
+      console.log(value)
+      let newData = superData.filter(element =>  element.categories_array[0].toLowerCase().includes(value.toLowerCase()))
+      setdata(
+        newData
+       );
+    }
   };
   const handleSliderChange = (name) => (e, value) => {
     setFormValues({
       ...formValues,
       [name]: value,
     });
+    let newData = superData.filter(element =>  element.hourly_rate > formValues.priceRange[0] && element.hourly_rate < formValues.priceRange[1])
+    setdata(
+      newData
+     );
   };
   const handleSubmit = (event) => {
     event.preventDefault();
-    console.log(formValues);
 
     let newData = superData.filter(element =>  element.hourly_rate > formValues.priceRange[0] && element.hourly_rate < formValues.priceRange[1])
     setdata(
@@ -92,7 +107,7 @@ const Feed = () => {
             }} */}
 
             { data.map((element,index) => {
-                return <Post key = {index} name = {element.name} bio = {element.bio} bookingrate = {element.hourly_rate} genre ={element.categories_array}/>
+                return <Post key = {index} name = {element.name} bio = {element.bio} bookingrate = {element.hourly_rate} genre ={element.categories_array[0]} id = {element.artist_id}/>
             })}
 
           </Grid>
