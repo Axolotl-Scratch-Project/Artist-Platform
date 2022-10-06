@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Grid , Paper, Avatar, Typography, TextField, Button } from '@mui/material';
 import { useNavigate, redirect, Link } from "react-router-dom";
 import PersonAddAlt1OutlinedIcon from '@mui/icons-material/PersonAddAlt1Outlined';
@@ -33,12 +33,19 @@ const Signup = () => {
     if(userType === 'Artist') {
       axios.post('/api/saveArtist', formField).then(res => {
         //need to redirect to diff home page based on user type- waiting on Raymond's main page
+        // window.localStorage.setItem('testing', JSON.stringify())
+        const artistData = res.data.artistData;
+        window.localStorage.setItem('artistId', JSON.stringify(artistData.id));
+        window.localStorage.setItem('userType', JSON.stringify('artist'));
         navigate("/signup/redirect");
       })
     }
     if (userType === 'Individual') {
       axios.post('api/saveUser', formField).then(res => {
         //need to redirect to diff home page based on user type- waiting on Raymond's main page
+        const userData = res.data.newUserData;
+        window.localStorage.setItem('userId', JSON.stringify(userData.id));
+        window.localStorage.setItem('userType', JSON.stringify('user'));
         navigate("/signup/redirect");
       })
     }
@@ -54,7 +61,9 @@ const Signup = () => {
     // console.log(event.target.value);
   }
 
-
+  //every time page renders, get localstorage, block of logic should be added to main pages and any pages after user logged in
+  // useEffect(() => {
+  // }, [])
 
   return (
     <Grid style = {{margin: '100px auto'}}>
