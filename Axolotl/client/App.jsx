@@ -5,7 +5,7 @@ import  Home  from './pages/Home.jsx';
 import  Signup  from './pages/Signup.jsx';
 import  Login  from './pages/Login.jsx'
 import Profile from './pages/Profile.jsx';
-import UserPage from './pages/UserPage.jsx';
+// import UserPage from './pages/UserPage.jsx';
 import Booking from './pages/Booking.jsx';
 
 const code = new URLSearchParams(window.location.search).get('code');
@@ -18,7 +18,7 @@ const App = () => {
     <Route path = "/login" exact element = {<Login/>}/>
     <Route path = "/booking" exact element = {<Booking/>}/>
     <Route path = "/profile" exact element = {<Profile/>}/>
-    <Route path = "/userView" exact element = {<UserPage/>}/>
+    {/* <Route path = "/userView" exact element = {<UserPage/>}/> */}
     {/* signup redirect page, potentially need to be redirect to different main pages */}
     <Route path = "/signup/redirect" element = {<Navigate to = "/"/>} />
 
