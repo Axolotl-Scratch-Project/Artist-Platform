@@ -68,10 +68,13 @@ userController.loginUser = async (req, res, next) => {
     // check if such a user exists
     if (emailUserLookup.rows[0]) {
       // compare passed in password w/ hashed password in DB
+      console.log("login user", typeof password, password, typeof emailUserLookup.rows[0].password, emailUserLookup.rows[0].password)
+
       const passwordCorrect = await bcrypt.compare(
         password,
         emailUserLookup.rows[0].password
       );
+      console.log("userController -> loginUser -> user and bcrypt compare", emailUserLookup.rows[0], passwordCorrect)
       if (!passwordCorrect) {
         throw new Error ("Wrong email or password")
       };
@@ -140,6 +143,23 @@ userController.loginUser = async (req, res, next) => {
         res.locals.userId = '';
         res.locals.userType = '';
       }
+    }
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+};
+
+userController.isLoggedIn = (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      res.locals.user = '';
+      req.locals.userType = '';
+    } else {
+      const verified = jwt.verify(token, process.env.JWT_SECRET);
+      req.locals.user = verified.user;
+      req.locals.userType = verified.usertype;
     }
     return next();
   } catch (err) {

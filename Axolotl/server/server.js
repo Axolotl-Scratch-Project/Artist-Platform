@@ -62,6 +62,23 @@ app.get('/api/logout', (req, res) => {
     .send();
 });
 
+// Checking if the user / artist is Logged In
+app.get('/api/isLoggedIn', (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      res.status(200).json({ user: '', userType: '' })
+    } else {
+      const verified = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("isLoggedIn", verified);
+      res.status(200).json({ user: verified.user, userType: verified.usertype })
+    }
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
 // BOOKINGS
   app.post('/api/booking', bookingController.createBooking, (req, res) => {
     // create a booking in booking table
@@ -102,7 +119,7 @@ app.get('/api/categories', artistController.getCategories, (req, res) => {
 
 app.post('/api/saveArtist', artistController.saveArtist, (req, res) => {
   return res.status(200).json({ artistData: res.locals.artistData });
-})
+});
 
 // TODO send endpoint with all artist categories
 
