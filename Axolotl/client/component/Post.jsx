@@ -12,27 +12,31 @@ import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { Box } from '@mui/material';
 
+var rightNow = new Date();
+var res = rightNow.toISOString().slice(0,16)
+
 const Post = (props) => {
-  var rightNow = new Date();
-  var res = rightNow.toISOString().slice(0,16)
 
   const [showText, setShowText] = useState(false);
   const onClick = () => setShowText(!showText);
   const [startTime, setstartTime] = useState(res);
   const [endTime, setendTime] = useState(res);
-  const [startPrice, setstartPrice] = useState();
+  const [startPrice, setstartPrice] = useState(0);
 
-  const handleStartChange = (newValue) => {
-    setstartTime(startTime);
+  const handleStartChange = (e) => {
+    setstartTime(e.target.value);
   };
-  const handleEndChange = (newValue) => {
-    setendTime(endTime);
+  const handleEndChange = (e) => {
+    setendTime(e.target.value);
   };
 
   const onclick = (newValue) => {
-    console.log(startTime,endTime);
-    // setstartPrice(Math.abs(new Date(endTime) - new Date((startTime))))
-    // setstartPrice(new Date(endTime))
+    const amount = (new Date(endTime) - new Date(startTime)) / 3600000 * props.bookingrate;    // setstartPrice(amount)
+    setstartPrice(amount)
+    console.log({artistID:props.id,
+                 bookerType:2,
+                 bookingsStart:startTime,
+                 bookingsEnd:endTime})
   };
   
 

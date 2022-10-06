@@ -97,18 +97,24 @@ const SideBar2 = (props) => {
         </Grid> */}
         <Box sx={{ minWidth: 170 }}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Genre</InputLabel>
+              <InputLabel id="demo-simple-select-label">Category</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
-                name="os"
-                label="Genre"
-                value={props.formValues.os}
+                name="category"
+                label="Category"
+                value={props.formValues.category}
                 onChange={props.handleInputChange}
               >
-                <MenuItem value={10}>Jazz</MenuItem>
-                <MenuItem value={20}>Rock</MenuItem>
-                <MenuItem value={30}>Country</MenuItem>
+                <MenuItem value={'Photographer'}>Photographer</MenuItem>
+                <MenuItem value={'Musician'}>Musician</MenuItem>
+                <MenuItem value={'Vocalist'}>Vocalist</MenuItem>
+                <MenuItem value={'Guitarist'}>Guitarist</MenuItem>
+                <MenuItem value={'Band'}>Band</MenuItem>
+                <MenuItem value={'Pianist'}>Pianist</MenuItem>
+                <MenuItem value={'Bassist'}>Bassist</MenuItem>
+                <MenuItem value={'Dancer'}>Dancer</MenuItem>
+                <MenuItem value={'Painter'}>Painter</MenuItem>
               </Select>
             </FormControl>
         </Box>
@@ -129,9 +135,9 @@ const SideBar2 = (props) => {
             />
           </div>
         </Grid>
-        <Button variant="contained" color="primary" type="submit">
+        {/* <Button variant="contained" color="primary" type="submit">
           Submit
-        </Button>
+        </Button> */}
       </Grid>
     </form>
   );
