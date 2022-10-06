@@ -29,7 +29,7 @@ const Feed = () => {
   const [superData, setSuperData] =useState([])
 
   const [data, setdata] =useState([])
-  const [value, setValue]=useState(0) 
+  const [value, setValue]=useState(0)
 
 
 
@@ -56,31 +56,31 @@ const Feed = () => {
       newData
      )
   };
-  
+
   function valuetext(formValues) {
     return {formValues};
   }
 
   useEffect(()=>{
     Axios.get('http://localhost:8080/api/artists').then((data) => {
-      console.log("feed -> useEffect -> data", data)
+      // console.log("feed -> useEffect -> data", data)
       setdata(data.data)
       setSuperData(data.data);
     })
   },[])
- 
+
 
 
   // useEffect(() => {
   //   datax.filter(element =>  element.bookingrate > formValues.priceRange[0])
   // },[]);
-  
+
 
   return (
     <div>
       <Grid container spacing={2} columns={10}>
           <Grid item xs={4}>
-            <SideBar2 handleInputChange = {handleInputChange} 
+            <SideBar2 handleInputChange = {handleInputChange}
                       handleSliderChange = {handleSliderChange}
                       handleSubmit = {handleSubmit}
                       formValues = {formValues}
