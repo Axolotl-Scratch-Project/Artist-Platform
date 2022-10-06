@@ -43,6 +43,20 @@ artistController.saveArtist = async (req, res, next) => {
   }
 }
 
+artistController.getCategories = (req, res, next) => {
+  console.log('getCategories')
+  const query = `SELECT * from categories`;
+  db.query(query)
+    .then(data => {
+      res.locals.categories = data.rows;
+      return next();
+    })
+    .catch(error => {
+      console.error('error in artistController.getCategories:', error);
+      return next(error)
+    })
+}
+
 artistController.getAllArtists = (req, res, next) => {
   console.log("getAllArtists")
   const query = 'SELECT artists.id as artist_id, artists.name, artists.email, artists.location, artists.hourly_rate, portfolios.bio, portfolios.profile_image_url, portfolios.homepage_url, artcat.categories_array FROM artists JOIN portfolios ON artists.id = portfolios.artist_id JOIN (select artists.id, array_agg(categories.category) as categories_array from artists JOIN artist_categories ON artists.id = artist_categories.artist_id JOIN categories ON categories.id = artist_categories.category_id group by artists.id) artcat ON artists.id = artcat.id';
