@@ -51,10 +51,15 @@ userController.loginUser = async (req, res, next) => {
       from users
       where users.email = $1 and users.password = $2
     `;
+    console.log("userController -> loginUser -> #1")
     const emailUserLookup = await db.query(checkUserQuery, [email, password]);
+    console.log("userController -> loginUser -> #2")
     if (emailUserLookup.rows[0]) {
       res.locals.doesUserExist = true;
       res.locals.isArtist = false;
+      res.locals.userId = emailUserLookup.rows[0].id;
+      res.locals.userType = 'user';
+      console.log(emailUserLookup.rows[0])
     } else {
         // checking if an ARTIST w/ such credentials exists
       const checkArtistQuery = `
@@ -63,14 +68,20 @@ userController.loginUser = async (req, res, next) => {
         where artists.email = $1 and artists.password = $2
       `;
       const emailArtistLookup = await db.query(checkArtistQuery, [email, password]);
+      console.log(emailArtistLookup.rows[0])
       if (emailArtistLookup.rows[0]) {
         res.locals.doesUserExist = true;
         res.locals.isArtist = true;
+        res.locals.userId = emailArtistLookup.rows[0].id;
+        res.locals.userType = 'artist';
       } else {
         res.locals.doesUserExist = false;
         res.locals.isArtist = false;
+        res.locals.userId = '';
+        res.locals.userType = '';
       }
     }
+    console.log("#3", res.locals)
     return next();
   } catch (err) {
     return next(err);
