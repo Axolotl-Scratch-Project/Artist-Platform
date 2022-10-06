@@ -19,7 +19,7 @@ artistController.saveArtist = async (req, res, next) => {
     throw new Error ('A user with this email already exists');
   } else {
     // creating a new user in the DB
-    const createUser = `
+    const createUserQuery = `
       INSERT INTO artists (email, name, password, location)
       VALUES ($1, $2, $3, $4)
       RETURNING *
@@ -28,8 +28,14 @@ artistController.saveArtist = async (req, res, next) => {
     // select *
     // from users
     // `
-    const newUser = await db.query(createUser, [email, displayName, password, loc]);
+    const newUser = await db.query(createUserQuery, [email, displayName, password, loc]);
     res.locals.artistData = newUser.rows[0];
+    const createPortfolioQuery = `
+      INSERT INTO portfolios (artist_id)
+      values ($1)
+      RETURNING *
+    `;
+    const newPortfolio = await db.query(createPortfolioQuery, [newUser.rows[0].id]);
   }
   return next();
   } catch (err) {
@@ -55,11 +61,11 @@ artistController.createProfile = async (req, res, next) => {
 artistController.getProfile = (req, res, next) => {
   console.log("getProfile")
   const id = req.query.id;
-  const query = `SELECT artists.id as artist_id, artists.name, artists.email, artists.location, artists.hourly_rate, portfolios.bio, portfolios.profile_image_url, portfolios.homepage_url, artcat.categories_array 
-  FROM artists 
-  JOIN portfolios ON artists.id = portfolios.artist_id 
+  const query = `SELECT artists.id as artist_id, artists.name, artists.email, artists.location, artists.hourly_rate, portfolios.bio, portfolios.profile_image_url, portfolios.homepage_url, artcat.categories_array
+  FROM artists
+  JOIN portfolios ON artists.id = portfolios.artist_id
   JOIN (
-    select artists.id, array_agg(categories.category) as categories_array from artists 
+    select artists.id, array_agg(categories.category) as categories_array from artists
     JOIN artist_categories ON artists.id = artist_categories.artist_id JOIN categories ON categories.id = artist_categories.category_id group by artists.id
   ) artcat ON artists.id = artcat.id WHERE artists.id = ${id}`;
   db.query(query)
