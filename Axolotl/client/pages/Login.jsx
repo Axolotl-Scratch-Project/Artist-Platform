@@ -6,7 +6,6 @@ import Button from '@mui/joy/Button';
 import Link from '@mui/joy/Link';
 import { useState } from 'react';
 // import { json } from 'body-parser';
-import { Navigate } from 'react-router';
 import { useNavigate, redirect} from "react-router-dom";
 import axios from 'axios';
 
@@ -36,17 +35,18 @@ const Login = (props) => {
         'password': password
       })
     }
-    // axios.post('/api/login', reqOptions).then(res => {
-    //   const data = res.data;
-    //   console.log(data)
-    //   navigate("/userview");
-    // })
-    const response = await fetch('http://localhost:3000/api/login', reqOptions)
-    const data = await response.json();
-    console.log(data.has_account);
-    if(data.has_account){
+    axios.post('/api/login', reqOptions).then(res => {
+      const data = res.data;
+      console.log(data)
       navigate("/userview");
-    }
+    })
+    // console.log(reqOptions);
+    // const response = await fetch('http://localhost:3000/api/login', reqOptions);
+    // const data = await response.json();
+    console.log(data.has_account);
+    // if(data.has_account){
+    //   navigate("/userview");
+    // }
   };
 
   return (
@@ -55,8 +55,8 @@ const Login = (props) => {
         sx={{
           maxWidth: 400,
           mx: 'auto',
-          my: 5, // margin top & botom
-          py: 3, // padding top & bottom
+          my: 5, 
+          py: 3, 
           px: 2,
           display: 'flex',
           flexDirection: 'column',
@@ -65,11 +65,9 @@ const Login = (props) => {
           boxShadow: 'md',
         }}
       >
-        <div>
-          <Typography>
-            <h1>Login</h1>
-          </Typography>
-        </div>
+        <Typography>
+          <h1>Login</h1>
+        </Typography>
         <TextField
               name="email"
               type="text"
