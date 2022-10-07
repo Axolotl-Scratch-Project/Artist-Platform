@@ -10,6 +10,9 @@ bookingController.createBooking = async (req, res, next) => {
     // how MUI date format interacts w/ PostgreSQL date format
     const { bookerId, bookerType, artistId, bookingStart, bookingEnd } = req.body;
     // search for whether an overlapping booking exists
+
+
+
     const availabilityCheck = ``;
     const artistHourlyQuery = `
     select artists.hourly_rate
