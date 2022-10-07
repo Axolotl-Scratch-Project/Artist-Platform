@@ -22,12 +22,16 @@ const Profile = (props) => {
     const [artistName ,setArtistName] = useState();
     const [collection, setCollection] = useState();
     useEffect( () =>{
-        Axios.get('http://localhost:3000/api/artists').then((data) => {
-            // console.log("Artist Data:", data.data[2]);
-            let artist = data.data[2];
+        
+        Axios.get('http://localhost:3000/api/profile/artist?id=2').then((data) => {
+            // console.log(data.data.artistGalleryLinks);
+            const artist = data.data.artistProfile;
+            const gallery = data.data.artistGalleryLinks;
             setBio(artist.bio);
-            setProfilePic(artist.profile_image_url)
-            setArtistName(artist.name)
+            setProfilePic(artist.profile_image_url);
+            setArtistName(artist.name);
+            setCollection(gallery[0].gallerypiece_url);
+            // console.log(collection);
         })
         // const loadPage = async () =>{
         //    const reqOptions ={
@@ -76,9 +80,8 @@ const Profile = (props) => {
                         flex: 7,
                     }}>
                     <Calendar/>
-                    <ArtistCollection/>
+                    <ArtistCollection collection={collection}/>
                 </Box>    
-            {/* {showForm ? handleChange(): null}     */}
             </Sheet>
         </div>
             

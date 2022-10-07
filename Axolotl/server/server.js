@@ -29,13 +29,11 @@ const port = process.env.PORT || 3000;
 
 
 // USER STUFF
-// WE NEED SPECIFIC NAMES / URIs
-// get/post/patch...
 
 app.post('/api/test', (req, res) => {
   console.log("TEST");
   res.json("xd")
-}); 
+});
 
 // SIGNUP
 app.post('/api/saveUser', userController.saveUser, (req, res) => {
@@ -46,7 +44,7 @@ app.post('/api/saveUser', userController.saveUser, (req, res) => {
 // LOGIN
 app.post('/api/login', userController.loginUser, (req, res, next) => {
   //authenticate user or artist with email
-  return res.status(200).json({ has_account: res.locals.doesUserExist, isArtist: res.locals.isArtist });
+  return res.status(200).json({ has_account: res.locals.doesUserExist, isArtist: res.locals.isArtist, userId: res.locals.userId, userType: res.locals.userType });
 });
 
 // BOOKINGS
@@ -54,8 +52,10 @@ app.post('/api/login', userController.loginUser, (req, res, next) => {
     // create a booking in booking table
     return res.status(200).json({ newBooking: res.locals.newBooking });
   })
-  
-  app.get('/api/booking', bookingController.getBookings, (req, res) => {
+
+
+  //changed get request to post request to pass req.body, changed end point to differentiate above endpoint
+  app.post('/api/getBooking', bookingController.getBookings, (req, res) => {
     // display bookings
     return res.status(200).json({ bookingsByUser: res.locals.bookingsByUser });
   });
@@ -63,9 +63,10 @@ app.post('/api/login', userController.loginUser, (req, res, next) => {
 
 // get categories (for the dropdown) (have artist and category tables joint)
   //
-// app.get('/api/categories', artistController.showCategories, (req, res) => {
-//   // return all category names from the db, expand in the dropdown
-// })
+app.get('/api/categories', artistController.getCategories, (req, res) => {
+  // return all category names from the db, expand in the dropdown
+  return res.status(200).json(res.locals)
+})
 
 // /api/filter
 //request body, we see if category is filtered, rate is filtered, query the joined table with joined filter)
@@ -88,6 +89,8 @@ app.post('/api/saveArtist', artistController.saveArtist, (req, res) => {
   return res.status(200).json({ artistData: res.locals.artistData });
 })
 
+// TODO send endpoint with all artist categories
+
 
 //backend send a full list of artist
 app.get('/api/artists', artistController.getAllArtists, (req, res) => {
@@ -96,23 +99,24 @@ app.get('/api/artists', artistController.getAllArtists, (req, res) => {
 
 
 // ARTIST STUFF and PROFILES
-// TODO
-app.post('/api/profile/artist', artistController.createProfile, (req, res) => {
-  // create artist profile
-  return res.status(200).json('api/artist');
-});
+// not currently needed. profile will automatically get created in /api/saveArtist
+// app.post('/api/profile/artist', artistController.createProfile, (req, res) => {
+//   // create artist profile
+//   return res.status(200).json('api/artist');
+// });
 
+// display artist profile
 app.get('/api/profile/artist', artistController.getProfile, artistController.getPortfolioGalleryLinks, (req, res) => {
-  // display artist profile
   return res.status(200).json(res.locals);
 });
 
-// TODO
-app.put('/api/profile/artist', artistController.editProfile, (req, res) => {
-  // edit artist profile
-  return res.status(200);
+
+// edit artist profile
+app.put('/api/profile/artist', artistController.editProfile, artistController.getProfile, artistController.getPortfolioGalleryLinks, (req, res) => {
+  return res.status(200).json(res.locals);
 })
 
+// Not being used right now. Sending galleryLinks with /api/profile/artist
 app.get('/api/profile/artist/links', artistController.getPortfolioGalleryLinks, (req, res) => {
   // display all URLs on artists's portfolio
   return res.status(200).json(res.locals.artistGalleryLinks);
@@ -148,7 +152,7 @@ app.post('/api/checkout', async(req, res) => {
       cancel_url:`${process.env.SERVER_URL}/home.html`,
     })
     res.json({ url: session.url })
-    console.log(res.json({ url: session.url }))
+    // console.log(res.json({ url: session.url }))
   } catch(e) {
     res.status(500).json({error: e.message});
   }

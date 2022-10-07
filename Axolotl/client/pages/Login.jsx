@@ -6,11 +6,15 @@ import Button from '@mui/joy/Button';
 import Link from '@mui/joy/Link';
 import { useState } from 'react';
 // import { json } from 'body-parser';
+import { Navigate } from 'react-router';
+import { useNavigate, redirect} from "react-router-dom";
+import axios from 'axios';
+
 
 const Login = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const navigate = useNavigate();
   const handleChange = (event) => {
     //sets email and password in state, from user input
     if(event.target.name === 'email'){
@@ -32,11 +36,16 @@ const Login = (props) => {
         'password': password
       })
     }
+    // axios.post('/api/login', reqOptions).then(res => {
+    //   const data = res.data;
+    //   console.log(data)
+    //   navigate("/userview");
+    // })
     const response = await fetch('http://localhost:3000/api/login', reqOptions)
     const data = await response.json();
-    console.log(data);
+    console.log(data.has_account);
     if(data.has_account){
-      <Navigate to="/" replace={true} />
+      navigate("/userview");
     }
   };
 
@@ -61,7 +70,7 @@ const Login = (props) => {
             <h1>Login</h1>
           </Typography>
         </div>
-        <TextField 
+        <TextField
               name="email"
               type="text"
               placeholder='Enter your email'
@@ -69,7 +78,7 @@ const Login = (props) => {
               onChange={handleChange}
               value={email}
               />
-        <TextField 
+        <TextField
               name="password"
               type="password"
               placeholder='Enter your password'

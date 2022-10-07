@@ -11,30 +11,48 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { Box } from '@mui/material';
+import { Axios } from 'axios';
+import { useNavigate } from "react-router-dom";
+import Chip from '@mui/material/Chip';
+
+var rightNow = new Date();
+var res = rightNow.toISOString().slice(0,16)
+console.log(localStorage);
 
 const Post = (props) => {
-  var rightNow = new Date();
-  var res = rightNow.toISOString().slice(0,16)
+  let navigate = useNavigate()
 
   const [showText, setShowText] = useState(false);
   const onClick = () => setShowText(!showText);
   const [startTime, setstartTime] = useState(res);
   const [endTime, setendTime] = useState(res);
-  const [startPrice, setstartPrice] = useState();
+  const [startPrice, setstartPrice] = useState(0);
 
-  const handleStartChange = (newValue) => {
-    setstartTime(startTime);
+  const handleStartChange = (e) => {
+    setstartTime(e.target.value);
   };
-  const handleEndChange = (newValue) => {
-    setendTime(endTime);
+  const handleEndChange = (e) => {
+    setendTime(e.target.value);
   };
 
-  const onclick = (newValue) => {
-    console.log(startTime,endTime);
-    // setstartPrice(Math.abs(new Date(endTime) - new Date((startTime))))
-    // setstartPrice(new Date(endTime))
+  const onclick = async(e) => {
+    e.preventDefault()
+    const amount = Math.round((new Date(endTime) - new Date(startTime)) / 3600000 * props.bookingrate);    // setstartPrice(amount)
+    setstartPrice(amount)
+    // if(!localStorage.getItem(bookerId)) {
+    //   navigate('/signup')
+    // } else if (localStorage.getItem(bookerId)){
+    //   let infor = {artistID:props.id,
+    //     bookerId:localStorage.getItem(bookerId),
+    //     bookerType:localStorage.getItem(bookerType)
+    //     bookingsStart:startTime,
+    //     bookingsEnd:endTime,
+    //     hourly_rate:props.bookingrate}
+    // await Axios.post('http://localhost:8080/api/checkout',infor)
+    // }
+    console.log('hello')
   };
-  
+
 
   return (
     <div>
@@ -50,16 +68,20 @@ const Post = (props) => {
         <Typography gutterBottom variant="h5" component="div">
           {props.name}
         </Typography>
-        <Typography gutterBottom variant="h7" component="div">
+        {/* <Typography gutterBottom variant="h7" component="div">
         {props.genre}
-        </Typography>
+        </Typography> */}
+        <Stack direction="row" spacing={1}>
+          {props.category.map((element,index) => <Chip key = {index} label={element} size="small"/>)}
+        </Stack>
+
         </Box>
         <Typography variant="body2" color="text.secondary">
           {props.bio}
         </Typography>
       </CardContent>
       <CardContent style={{paddingTop:5, paddingBottom:0, display: 'flex', alignItems: 'center'}}>
-        <AttachMoneyIcon/> 
+        <AttachMoneyIcon/>
         <Typography variant="body2" color="text.secondary">
         {props.bookingrate}
         </Typography>
