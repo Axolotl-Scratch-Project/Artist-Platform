@@ -58,8 +58,6 @@ const Booking = () => {
     })
   }, []);
 
-
-
   return (
     <Grid>
     <UserViewNav />
