@@ -35,6 +35,11 @@ const Post = (props) => {
     setendTime(e.target.value);
   };
 
+  const handleProfileChange = (e) =>{
+    window.localStorage.setItem('artistID', JSON.stringify(props.id));
+    navigate('/profile')
+  }
+
   const onclick = async (e) => {
     e.preventDefault()
     const amount = Math.round((new Date(endTime) - new Date(startTime)) / 3600000 * props.bookingrate);    // setstartPrice(amount)
@@ -63,7 +68,13 @@ const Post = (props) => {
         component="img"
         alt="green iguana"
         height="140"
-        image="https://i.natgeofe.com/n/de94c416-6d23-45f5-9708-e8d56289268e/naturepl_01132178.jpg?w=636&h=631"
+        // bottom="-80px"
+        // position="absolute"
+        // top="0px"
+        // image="https://i.natgeofe.com/n/de94c416-6d23-45f5-9708-e8d56289268e/naturepl_01132178.jpg?w=636&h=631"
+        image={props.profileimage}
+        sx={{objectFit: "cover",
+        objectPosition: 'center -30px'}}
       />
       <CardContent>
         <Box style={{display:'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -94,7 +105,7 @@ const Post = (props) => {
         <Button onClick= {onClick} style= {{ marginLeft:'0px'}} size="small">Book Now</Button>
         <p>|</p>
         <Button style={{minWidth:'32px',marginLeft:'0px'}}><AddCircleIcon color="primary" /></Button>
-        <Button style= {{ marginLeft:'0px'}} size="small">View Full Profile</Button>
+        <Button style= {{ marginLeft:'0px'}} size="small" onClick={handleProfileChange}>View Full Profile</Button>
       </CardActions>
 
       <Box style={{display:'flex',justifyContent:'space-between',alignContent:'center'}}>
