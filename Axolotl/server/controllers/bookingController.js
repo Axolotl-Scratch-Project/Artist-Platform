@@ -53,28 +53,43 @@ bookingController.getBookings = async (req, res, next) => {
     const { bookerId, bookerType } = req.body;
     if (bookerType === 'artist') {
       const artistBusinessBookingsQuery = `
-      select
-      b.id, b.artist_id, artists.name as artist_name, b.amount, b.booking_start, b.booking_end, b.booker_id, b.booker_type, artists.name as booker_name
-      from bookings as b
-      inner join artists on b.booker_id = artists.id and b.booker_type = 'artist'
-      where b.artist_id = $1
-
-      union all
-
-      select
-      b.id, b.artist_id, artists.name as artist_name, b.amount, b.booking_start, b.booking_end, b.booker_id, b.booker_type, users.name as booker_name
-      from bookings as b
-      inner join users on b.booker_id = users.id and b.booker_type = 'user'
-      inner join artists on b.artist_id = artists.id
-      where b.artist_id = $1
+      with bookings as (      
+        select
+        b.id, b.artist_id, b.amount, b.booking_start, b.booking_end, b.booker_id, b.booker_type, artists.name as booker_name
+        from bookings as b
+        inner join artists on b.booker_id = artists.id and b.booker_type = 'artist'
+        where b.artist_id = $1
+  
+        union all
+  
+        select
+        b.id, b.artist_id, b.amount, b.booking_start, b.booking_end, b.booker_id, b.booker_type, users.name as booker_name
+        from bookings as b
+        inner join users on b.booker_id = users.id and b.booker_type = 'user'
+        inner join artists on b.artist_id = artists.id
+        where b.artist_id = $1
+        )
+        
+        select
+        bookings.*,
+        artists.name as artist_name
+        from bookings
+        inner join artists on bookings.artist_id = artists.id 
       `;
       const artistBusinessBookings = await db.query(artistBusinessBookingsQuery, [bookerId]);
       const artistPersonalBookingsQuery = `
+      with bookings as (
+        select
+        b.id, b.artist_id, art.name as artist_name, b.amount, b.booking_start, b.booking_end, b.booker_id, b.booker_type
+        from bookings as b
+        inner join artists as art on b.artist_id = art.id
+        where b.booker_id = $1 and b.booker_type = $2
+      )
       select
-      b.id, b.artist_id, art.name as artist_name, b.amount, b.booking_start, b.booking_end, b.booker_id, b.booker_type, art.name as booker_name
-      from bookings as b
-      inner join artists as art on b.artist_id = art.id
-      where b.booker_id = $1 and b.booker_type = $2
+      bookings.*,
+      artists.name as booker_name
+      from bookings
+      inner join artists on bookings.booker_id = artists.id
       `;
       const artistPersonalBookings = await db.query(artistPersonalBookingsQuery, [bookerId, bookerType]);
       res.locals.bookings = { personalBookings: artistPersonalBookings.rows, businessBookings: artistBusinessBookings.rows };

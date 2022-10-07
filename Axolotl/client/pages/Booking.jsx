@@ -36,8 +36,8 @@ const Booking = () => {
 
 
   const bookingInfo = {
-    bookerId: 1,
-    bookerType: 'user'
+    bookerId: 35,
+    bookerType: 'artist'
   }
 
   const [bookings, setBookings] = useState([]);
@@ -47,11 +47,25 @@ const Booking = () => {
     axios.post('/api/getBooking', bookingInfo).then(res => {
       // localstorage
       // create a variable
-      const reformatBooking = res.data.bookingsByUser.map(booking => {
+      console.log(res.data);
+      const reformatBooking = res.data.bookings.personalBookings.map(booking => {
         booking.booking_start = formatDate(booking.booking_start);
         booking.booking_end =  formatDate(booking.booking_end);
         return booking;
-      })
+      });
+      let reformatArtistBusinessBooking;
+      if (bookingInfo.bookerType === 'artist') {
+        reformatArtistBusinessBooking = res.data.bookings.businessBookings.map(booking => {
+          booking.booking_start = formatDate(booking.booking_start);
+          booking.booking_end =  formatDate(booking.booking_end);
+          return booking;
+        });
+      }
+      // const reformatBooking = res.data.bookingsByUser.map(booking => {
+      //   booking.booking_start = formatDate(booking.booking_start);
+      //   booking.booking_end =  formatDate(booking.booking_end);
+      //   return booking;
+      // })
       // setBookings(res.data.bookingsByUser);
       setBookings(reformatBooking);
       setLatestBooking(reformatBooking[reformatBooking.length - 1]);
