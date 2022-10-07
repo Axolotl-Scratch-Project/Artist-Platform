@@ -21,7 +21,7 @@ artistController.saveArtist = async (req, res, next) => {
     throw new Error ('A user with this email already exists');
   } else {
     // creating a new artist in the DB
-    const createUserQuery = `
+    const createArtistQuery = `
       INSERT INTO artists (email, name, password, location)
       VALUES ($1, $2, $3, $4)
       RETURNING *
