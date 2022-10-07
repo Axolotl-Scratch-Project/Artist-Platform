@@ -61,7 +61,13 @@ const Post = (props) => {
         component="img"
         alt="green iguana"
         height="140"
-        image="https://i.natgeofe.com/n/de94c416-6d23-45f5-9708-e8d56289268e/naturepl_01132178.jpg?w=636&h=631"
+        // bottom="-80px"
+        // position="absolute"
+        // top="0px"
+        // image="https://i.natgeofe.com/n/de94c416-6d23-45f5-9708-e8d56289268e/naturepl_01132178.jpg?w=636&h=631"
+        image={props.profileimage}
+        sx={{objectFit: "cover",
+        objectPosition: 'center -30px'}}
       />
       <CardContent>
         <Box style={{display:'flex', justifyContent: 'space-between', alignItems: 'center'}}>
