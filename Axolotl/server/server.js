@@ -7,6 +7,8 @@ const userController = require('./controllers/userController');
 const artistController = require('./controllers/artistController');
 const bookingController = require('./controllers/bookingController');
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
+const cookieParser = require('cookie-parser');
+
 
 
 const dotenv = require('dotenv');
@@ -17,6 +19,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 // app.use(bodyParser.json());
 const port = process.env.PORT || 3000;
 
@@ -38,7 +41,7 @@ app.post('/api/test', (req, res) => {
 // SIGNUP
 app.post('/api/saveUser', userController.saveUser, (req, res) => {
   //save user/artist in corresponding database
-  return res.status(200).json({ newUserData: res.locals.userData });
+  return res.status(200).send({ newUserData: res.locals.userData });
 });
 
 // LOGIN
@@ -47,11 +50,74 @@ app.post('/api/login', userController.loginUser, (req, res, next) => {
   return res.status(200).json({ has_account: res.locals.doesUserExist, isArtist: res.locals.isArtist, userId: res.locals.userId, userType: res.locals.userType });
 });
 
+// LOGOUT
+app.get('/api/logout', (req, res) => {
+  res
+    .cookie("token", "", {
+      httpOnly: true,
+      expires: new Date(0),
+      secure: true,
+      sameSite: "none",
+    })
+    .send();
+});
+
+// Checking if the user / artist is Logged In
+app.get('/api/isLoggedIn', (req, res, next) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) {
+      res.status(200).json({ user: '', userType: '' })
+    } else {
+      const verified = jwt.verify(token, process.env.JWT_SECRET);
+      console.log("isLoggedIn", verified);
+      res.status(200).json({ user: verified.user, userType: verified.usertype })
+    }
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
+
 // BOOKINGS
-  app.post('/api/booking', bookingController.createBooking, (req, res) => {
-    // create a booking in booking table
-    return res.status(200).json({ newBooking: res.locals.newBooking });
-  })
+// Create booking + Stripe API
+app.post('/api/checkout', bookingController.createBooking, async(req, res) => {
+  //get artistid from booking controller
+  const artistRate = req.body.hourly_rate;
+  const hours = req.body.hours;
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: { name: 'artist_booking'},
+            // unit_amount: artistRate * 100,
+            unit_amount: 50 * 100,
+          },
+          // quantity: hours,
+          quantity: 1,
+        }
+      ],
+      success_url:`${process.env.SERVER_URL}/bookings.html`,
+      cancel_url:`${process.env.SERVER_URL}/home.html`,
+    })
+    res.json({ url: session.url })
+    // console.log(res.json({ url: session.url }))
+  } catch(e) {
+    res.status(500).json({error: e.message});
+  }
+
+});
+
+
+  // app.post('/api/booking', bookingController.createBooking, (req, res) => {
+  //   // create a booking in booking table
+  //   return res.status(200).json({ newBooking: res.locals.newBooking });
+  // });
 
 
   //changed get request to post request to pass req.body, changed end point to differentiate above endpoint
@@ -87,7 +153,7 @@ app.get('/api/categories', artistController.getCategories, (req, res) => {
 
 app.post('/api/saveArtist', artistController.saveArtist, (req, res) => {
   return res.status(200).json({ artistData: res.locals.artistData });
-})
+});
 
 // TODO send endpoint with all artist categories
 
@@ -124,39 +190,6 @@ app.get('/api/profile/artist/links', artistController.getPortfolioGalleryLinks, 
 
 app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
-});
-
-
-//Stripe API
-app.post('/api/checkout', async(req, res) => {
-  //get artistid from booking controller
-  const artistRate = req.body.hourly_rate;
-  const hours = req.body.hours;
-  try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'payment',
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            product_data: { name: 'artist_booking'},
-            // unit_amount: artistRate * 100,
-            unit_amount: 50 * 100,
-          },
-          // quantity: hours,
-          quantity: 1,
-        }
-      ],
-      success_url:`${process.env.SERVER_URL}/bookings.html`,
-      cancel_url:`${process.env.SERVER_URL}/home.html`,
-    })
-    res.json({ url: session.url })
-    // console.log(res.json({ url: session.url }))
-  } catch(e) {
-    res.status(500).json({error: e.message});
-  }
-
 });
 
 
