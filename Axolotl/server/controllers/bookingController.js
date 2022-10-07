@@ -12,7 +12,7 @@ bookingController.createBooking = async (req, res, next) => {
     // search for whether an overlapping booking exists
     const availabilityCheck = ``;
     const artistHourlyQuery = `
-    select artists.hourly_rate
+    select artists.hourly_rate, artists.name
     from artists
     where artists.id = $1
     `;
@@ -30,11 +30,14 @@ bookingController.createBooking = async (req, res, next) => {
       RETURNING *
     `;
     // console.log([bookerId, bookerType, artistId, amount, bookingStart, bookingEnd]);
-    const newBooking = await db.query(createBookingQuery, [bookerId, 'user', artistId, amount, bookingStart, bookingEnd]);
+    const newBooking = await db.query(createBookingQuery, [bookerId, bookerType, artistId, amount, bookingStart, bookingEnd]);
     console.log("bookingController -> createBooking -> newBooking.rows[0]", newBooking.rows[0])
     const hours = (new Date(bookingEnd) - new Date(bookingStart)) / 3600000;
 
     res.locals.newBooking = newBooking.rows[0];
+    res.locals.hours = (new Date(bookingEnd) - new Date(bookingStart)) / 3600000
+    res.locals.hourlyRate = artistHourly.rows[0]['hourly_rate']
+    res.locals.artistName = artistHourly.rows[0]['name']
     return next();
   } catch (err) {
     return next(err);
@@ -45,16 +48,6 @@ bookingController.getBookings = async (req, res, next) => {
   console.log('bookingController.getBookings invoked');
   try {
     const { bookerId, bookerType } = req.body;
-    // THIS ASSUMES THAT ONLY USERS CAN MAKE BOOKINGS
-    const bookingsByUserIdQuery = `
-      select
-      b.id, b.artist_id, art.name as artist_name, b.amount, b.booking_start, b.booking_end, b.booker_id, b.booker_type, u.name as booker_name
-      from bookings as b
-      inner join artists as art on b.artist_id = art.id
-      inner join users as u on b.booker_id = u.id
-      where b.booker_id = $1 and b.booker_type = $2
-    `;
-    let bookingsByUserId;
     if (bookerType === 'artist') {
       const artistBusinessBookingsQuery = `
       select
@@ -78,13 +71,22 @@ bookingController.getBookings = async (req, res, next) => {
       b.id, b.artist_id, art.name as artist_name, b.amount, b.booking_start, b.booking_end, b.booker_id, b.booker_type, art.name as booker_name
       from bookings as b
       inner join artists as art on b.artist_id = art.id
-      where b.booker_id = $1
+      where b.booker_id = $1 and b.booker_type = $2
       `;
-      bookingsByUserId = await db.query(bookingsByUserIdQuery, [bookerId, 'artist']);
+      const artistPersonalBookings = await db.query(artistPersonalBookingsQuery, [bookerId, bookerType]);
+      res.locals.bookings = { personalBookings: artistPersonalBookings.rows, businessBookings: artistBusinessBookings.rows };
     } else {
-      bookingsByUserId = await db.query(bookingsByUserIdQuery, [bookerId, 'user']);
+        const userPersonalBookingsQuery = `
+        select
+        b.id, b.artist_id, art.name as artist_name, b.amount, b.booking_start, b.booking_end, b.booker_id, b.booker_type, u.name as booker_name
+        from bookings as b
+        inner join artists as art on b.artist_id = art.id
+        inner join users as u on b.booker_id = u.id
+        where b.booker_id = $1 and b.booker_type = $2
+        `;
+        const userPersonalBookings = await db.query(userPersonalBookingsQuery, [bookerId, bookerType]);
+        res.locals.bookings = { personalBookings: userPersonalBookings.rows, businessBookings: {} };
     }
-    res.locals.bookingsByUser = bookingsByUserId.rows;
     return next();
   } catch (err) {
     return next(err);
