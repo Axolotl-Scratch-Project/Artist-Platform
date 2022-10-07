@@ -1,9 +1,9 @@
 import React from 'react'
-import UserViewNav from '../component/UserView'
+import UserView from '../component/UserView'
 
 const UserPage = () => {
   return (
-    <UserViewNav/>
+    <UserView/>
   )
 }
 
