@@ -18,7 +18,7 @@ const App = () => {
     <Route path = "/login" exact element = {<Login/>}/>
     <Route path = "/booking" exact element = {<Booking/>}/>
     <Route path = "/profile" exact element = {<Profile/>}/>
-    {/* <Route path = "/userView" exact element = {<UserPage/>}/> */}
+    <Route path = "/userView" exact element = {<UserPage/>}/>
     {/* signup redirect page, potentially need to be redirect to different main pages */}
     <Route path = "/signup/redirect" element = {<Navigate to = "/"/>} />
 
