@@ -37,6 +37,9 @@ const UserViewNav = () => {
   const toComponent=(address)=>{
     navigate('/'+ address);
   }
+  console.log(localStorage.getItem('userType')==='"user"' )
+  console.log(localStorage.getItem('userType'))
+  console.log(localStorage)
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -93,11 +96,10 @@ const UserViewNav = () => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
               >
-                {/* {localStorage.getItem(bookerType==='artist') && <MenuItem onClick={()=> toComponent('profile')}>Profile</MenuItem>} */}
-                {/* {false && <MenuItem onClick={()=> toComponent('profile')}>Profile</MenuItem>} */}
-                <MenuItem onClick={()=> toComponent('profile')}>Profile</MenuItem>
-
+                {localStorage.getItem('userType') ==='"artist"'  && <MenuItem onClick={()=> toComponent('profile')}>Profile</MenuItem>}
                 <MenuItem onClick={handleClose}>My account</MenuItem>
+                <MenuItem onClick={()=> toComponent('')}>Logout</MenuItem>
+
               </Menu>
             </div>
           )}

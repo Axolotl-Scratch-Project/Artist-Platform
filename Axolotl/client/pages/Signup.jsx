@@ -44,6 +44,7 @@ const Signup = () => {
       axios.post('api/saveUser', formField).then(res => {
         //need to redirect to diff home page based on user type- waiting on Raymond's main page
         const userData = res.data.newUserData;
+        // i think this is redundant 
         window.localStorage.setItem('userId', JSON.stringify(userData.id));
         window.localStorage.setItem('userType', JSON.stringify("user"));
         navigate("/signup/redirect");
