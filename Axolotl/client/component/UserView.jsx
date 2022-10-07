@@ -3,8 +3,7 @@ import Post from './Post'
 import Axios from 'axios'
 import SideBar2 from '../component/SideBar2'
 import { Box,Stack,Grid, Button } from '@mui/material';
-
-
+import UserViewNav from '../component/UserViewNav'
 
 const fakedata =[{id:'1',
               name:'ray',
@@ -24,12 +23,11 @@ const defaultValues = {
   priceRange: [0,2000],
 };
 
-const Feed = () => {
-  // const [artistInfor, setartistInfor] =useState([])
+const UserView = () => {
   const [superData, setSuperData] =useState([])
 
   const [data, setdata] =useState([])
-  const [value, setValue]=useState(0)
+  const [value, setValue]=useState(0) 
 
 
 
@@ -48,7 +46,6 @@ const Feed = () => {
     } else if (name === 'category') {
       console.log(value)
       let newData = value ==='All'||'' ? superData: superData.filter(element =>  element.categories_array.includes(value))
-      // let newData = superData.filter(element =>  element.categories_array.includes(value))
       setdata(
         newData
        );
@@ -64,14 +61,14 @@ const Feed = () => {
       newData
      );
   };
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-  //   let newData = superData.filter(element =>  element.hourly_rate > formValues.priceRange[0] && element.hourly_rate < formValues.priceRange[1])
-  //   setdata(
-  //     newData
-  //    )
-  // };
+    let newData = superData.filter(element =>  element.hourly_rate > formValues.priceRange[0] && element.hourly_rate < formValues.priceRange[1])
+    setdata(
+      newData
+     )
+  };
   
   function valuetext(formValues) {
     return {formValues};
@@ -79,26 +76,26 @@ const Feed = () => {
 
   useEffect(()=>{
     Axios.get('http://localhost:8080/api/artists').then((data) => {
-      // console.log("feed -> useEffect -> data", data)
       setdata(data.data)
       setSuperData(data.data);
     })
   },[])
-
-
+ 
+console.log(data)
 
   // useEffect(() => {
   //   datax.filter(element =>  element.bookingrate > formValues.priceRange[0])
   // },[]);
-
+  
 
   return (
     <div>
+      <UserViewNav/>
       <Grid container spacing={2} columns={10}>
           <Grid item xs={4}>
-            <SideBar2 handleInputChange = {handleInputChange}
+            <SideBar2 handleInputChange = {handleInputChange} 
                       handleSliderChange = {handleSliderChange}
-                      // handleSubmit = {handleSubmit}
+                      handleSubmit = {handleSubmit}
                       formValues = {formValues}
                       valuetext = {valuetext}/>
           </Grid>
@@ -109,7 +106,7 @@ const Feed = () => {
 
             { data.map((element,index) => {
                 return <Post key = {index} name = {element.name} bio = {element.bio} bookingrate = {element.hourly_rate} category ={element.categories_array} id = {element.artist_id}/>
-            })}
+              })}
 
           </Grid>
       </Grid>
@@ -117,11 +114,4 @@ const Feed = () => {
   )
 }
 
-export default Feed
-
-{/* <Post name = {data[0].name} bio = {data[0].bio} bookingrate = {data[0].bookingrate} genre ={data[0].genre}/>
-            <Post name = {data[1].name} bio = {data[1].bio} bookingrate = {data[1].bookingrate} genre ={data[1].genre}/>
-            {/* <Post name = {data[0].name} bio = {data[0].bio} bookingrate = {data[0].bookingrate} genre ={data[0].genre}/>
-            <Post name = {data[0].name} bio = {data[0].bio} bookingrate = {data[0].bookingrate} genre ={data[0].genre}/>
-            <Post name = {data[0].name} bio = {data[0].bio} bookingrate = {data[0].bookingrate} genre ={data[0].genre}/>
-            <Post name = {data[0].name} bio = {data[0].bio} bookingrate = {data[0].bookingrate} genre ={data[0].genre}/>  */}
+export default UserView;

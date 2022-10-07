@@ -29,8 +29,6 @@ const port = process.env.PORT || 3000;
 
 
 // USER STUFF
-// WE NEED SPECIFIC NAMES / URIs
-// get/post/patch...
 
 app.post('/api/test', (req, res) => {
   console.log("TEST");
@@ -65,9 +63,10 @@ app.post('/api/login', userController.loginUser, (req, res, next) => {
 
 // get categories (for the dropdown) (have artist and category tables joint)
   //
-// app.get('/api/categories', artistController.showCategories, (req, res) => {
-//   // return all category names from the db, expand in the dropdown
-// })
+app.get('/api/categories', artistController.getCategories, (req, res) => {
+  // return all category names from the db, expand in the dropdown
+  return res.status(200).json(res.locals)
+})
 
 // /api/filter
 //request body, we see if category is filtered, rate is filtered, query the joined table with joined filter)
@@ -90,6 +89,8 @@ app.post('/api/saveArtist', artistController.saveArtist, (req, res) => {
   return res.status(200).json({ artistData: res.locals.artistData });
 })
 
+// TODO send endpoint with all artist categories
+
 
 //backend send a full list of artist
 app.get('/api/artists', artistController.getAllArtists, (req, res) => {
@@ -98,23 +99,24 @@ app.get('/api/artists', artistController.getAllArtists, (req, res) => {
 
 
 // ARTIST STUFF and PROFILES
-// TODO
-app.post('/api/profile/artist', artistController.createProfile, (req, res) => {
-  // create artist profile
-  return res.status(200).json('api/artist');
-});
+// not currently needed. profile will automatically get created in /api/saveArtist
+// app.post('/api/profile/artist', artistController.createProfile, (req, res) => {
+//   // create artist profile
+//   return res.status(200).json('api/artist');
+// });
 
+// display artist profile
 app.get('/api/profile/artist', artistController.getProfile, artistController.getPortfolioGalleryLinks, (req, res) => {
-  // display artist profile
   return res.status(200).json(res.locals);
 });
 
-// TODO
-app.put('/api/profile/artist', artistController.editProfile, (req, res) => {
-  // edit artist profile
-  return res.status(200);
+
+// edit artist profile
+app.put('/api/profile/artist', artistController.editProfile, artistController.getProfile, artistController.getPortfolioGalleryLinks, (req, res) => {
+  return res.status(200).json(res.locals);
 })
 
+// Not being used right now. Sending galleryLinks with /api/profile/artist
 app.get('/api/profile/artist/links', artistController.getPortfolioGalleryLinks, (req, res) => {
   // display all URLs on artists's portfolio
   return res.status(200).json(res.locals.artistGalleryLinks);
