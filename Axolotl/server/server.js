@@ -70,7 +70,7 @@ app.get('/api/isLoggedIn', (req, res, next) => {
       res.status(200).json({ user: '', userType: '' })
     } else {
       const verified = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("isLoggedIn", verified);
+      console.log("isLoggedIn -> token body?", verified);
       res.status(200).json({ user: verified.user, userType: verified.usertype })
     }
     return next();
@@ -84,8 +84,9 @@ app.get('/api/isLoggedIn', (req, res, next) => {
 // Create booking + Stripe API
 app.post('/api/checkout', bookingController.createBooking, async(req, res) => {
   //get artistid from booking controller
-  const artistRate = req.body.hourly_rate;
-  const hours = req.body.hours;
+  const artistRate = res.locals.hourlyRate;
+  const hours = res.locals.hours;
+  const artistName = res.locals.artistName;
   try {
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -94,23 +95,22 @@ app.post('/api/checkout', bookingController.createBooking, async(req, res) => {
         {
           price_data: {
             currency: 'usd',
-            product_data: { name: 'artist_booking'},
+            product_data: { name: artistName },
             // unit_amount: artistRate * 100,
-            unit_amount: 50 * 100,
+            unit_amount: artistRate * 100,
           },
           // quantity: hours,
-          quantity: 1,
+          quantity: hours,
         }
       ],
-      success_url:`${process.env.SERVER_URL}/bookings.html`,
-      cancel_url:`${process.env.SERVER_URL}/home.html`,
+      success_url:`${process.env.SERVER_URL}/booking`,
+      cancel_url:`${process.env.SERVER_URL}/`,
     })
     res.json({ url: session.url })
     // console.log(res.json({ url: session.url }))
   } catch(e) {
     res.status(500).json({error: e.message});
   }
-
 });
 
 
@@ -123,7 +123,7 @@ app.post('/api/checkout', bookingController.createBooking, async(req, res) => {
   //changed get request to post request to pass req.body, changed end point to differentiate above endpoint
   app.post('/api/getBooking', bookingController.getBookings, (req, res) => {
     // display bookings
-    return res.status(200).json({ bookingsByUser: res.locals.bookingsByUser });
+    return res.status(200).json({ bookings: res.locals.bookings });
   });
 
 

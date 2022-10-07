@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const userController = {};
 console.log("userController")
 
+// signup
 userController.saveUser = async (req, res, next) => {
   console.log("saveUser")
   try {
