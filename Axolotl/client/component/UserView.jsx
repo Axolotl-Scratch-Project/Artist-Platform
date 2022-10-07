@@ -24,6 +24,7 @@ const defaultValues = {
 };
 
 const UserView = () => {
+
   const [superData, setSuperData] =useState([])
 
   const [data, setdata] =useState([])
