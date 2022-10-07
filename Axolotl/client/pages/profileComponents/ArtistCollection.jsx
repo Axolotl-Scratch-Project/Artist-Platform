@@ -11,11 +11,10 @@ const ArtistCollection = (props) => {
                     // justifyContent: 'center',
                     alignItems: 'center',
                     flexDirection: 'column',
-                    height: '50%',
-
+                    height: '50%'
                 }}>
                     
-                <h1>Artist Gallery</h1>
+                <h1>Artist Collection</h1>
                 <Box sx={{
                     display:'flex',
                     justifyContent:'center',

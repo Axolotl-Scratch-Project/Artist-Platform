@@ -18,12 +18,11 @@ const ArtistBio = (props) => {
         <Typography
             sx={{
                 display: 'flex',
+                flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
                 maxWidth: '100%',
-                background: 'grey',
-                padding: '10px 10px 10px 10px'
-                // h5: 'h5'
+                padding: '10px 10px 10px 10px',
             }}
         >
             <h4>Bio:  </h4>   

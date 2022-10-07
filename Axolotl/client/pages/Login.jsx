@@ -5,7 +5,6 @@ import TextField from '@mui/joy/TextField';
 import Button from '@mui/joy/Button';
 import Link from '@mui/joy/Link';
 import { useState } from 'react';
-// import { json } from 'body-parser';
 import { useNavigate, redirect} from "react-router-dom";
 import axios from 'axios';
 
@@ -37,25 +36,20 @@ const Login = (props) => {
     }
     axios.post('/api/login', reqOptions).then(res => {
       const data = res.data;
-      console.log(data)
-      navigate("/userview");
+      console.log(data.has_account);
+      if(data.has_account){
+        navigate("/userview");
+      }
     })
-    // console.log(reqOptions);
-    // const response = await fetch('http://localhost:3000/api/login', reqOptions);
-    // const data = await response.json();
-    console.log(data.has_account);
-    // if(data.has_account){
-    //   navigate("/userview");
-    // }
   };
-
+  //rendering login page
   return (
     <CssVarsProvider>
       <Sheet variant="outlined"
         sx={{
           maxWidth: 400,
           mx: 'auto',
-          my: 5, 
+          my: 20, 
           py: 3, 
           px: 2,
           display: 'flex',

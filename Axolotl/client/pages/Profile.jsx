@@ -10,7 +10,7 @@ import ArtistBio from './profileComponents/ArtistBio';
 import Axios from 'axios';
 import NavBar from '../component/Navbar';
 import { Modal } from '@mui/material';
-
+import { shadows } from '@mui/system';
 
 
 
@@ -33,16 +33,6 @@ const Profile = (props) => {
             setCollection(gallery[0].gallerypiece_url);
             // console.log(collection);
         })
-        // const loadPage = async () =>{
-        //    const reqOptions ={
-        //     method: 'GET',
-        //     headers: { 'Content-Type': 'application/json' }
-        //   }
-        // const response = await fetch('http://localhost:3000/api/profile/artist', reqOptions)
-        // const data = await response.json();
-        // console.log(data); 
-        // }
-        // loadPage();
     }, []);
     
     
@@ -67,6 +57,9 @@ const Profile = (props) => {
                     sx={{
                     outline: '10px black',
                     flex: 3,
+                    backgroundColor: '#FFFFF',
+                    borderRight: 1,
+                    boxShadow: 1
                 }}>
                     <Button onClick={() => setIsOpen(true)}>Edit</Button>
                     <Modal open={isOpen} onClose={() => setIsOpen(false)}>

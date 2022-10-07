@@ -45,9 +45,11 @@ return (
         alignItems: 'center',
         maxWidth: '100%',
         mx: 'auto',
-        my: 5, // margin top & botom
-        py: 3, // padding top & bottom
-        px: 2
+        my: 5, 
+        py: 5, 
+        px: 2,
+        pb: 15,
+        borderBottom: 1
     }}>
         <h2>{props.artistName}</h2>
         <Avatar 
