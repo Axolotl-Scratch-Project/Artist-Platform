@@ -4,7 +4,9 @@ import { useState, react } from 'react';
 import { Typography, Button } from "@mui/joy";
 
 const ArtistBio = (props) => {
-    const [bio, setBio] = useState('Artist Bio')
+    // const {bio} = useState(props.bio);
+
+   
 
     const submitBio = (event) =>{
         
@@ -17,10 +19,15 @@ const ArtistBio = (props) => {
             sx={{
                 display: 'flex',
                 justifyContent: 'center',
-                h5: 'h5'
+                alignItems: 'center',
+                maxWidth: '100%',
+                background: 'grey',
+                padding: '10px 10px 10px 10px'
+                // h5: 'h5'
             }}
         >
-            {bio}
+            <h4>Bio:  </h4>   
+            {props.bio}
         </Typography>
         
     )

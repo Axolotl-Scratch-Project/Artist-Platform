@@ -1,68 +1,86 @@
-import { CssVarsProvider } from '@mui/joy/styles';
 import Sheet from '@mui/joy/Sheet';
-import Typography from '@mui/joy/Typography';
-import TextField from '@mui/joy/TextField';
 import Button from '@mui/joy/Button';
-import { Avatar } from '@mui/material';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ProfilePicture from './profileComponents/ProfilePicture';
 import ArtistCollection from './profileComponents/ArtistCollection';
+import EditProfMenu from './profileComponents/EditProfMenu';
 import {Box} from '@mui/system';
 import Calendar from './profileComponents/Calendar';
 import ArtistBio from './profileComponents/ArtistBio';
-import EditProfMenu from './profileComponents/EditProfMenu';
+import Axios from 'axios';
+import NavBar from '../component/Navbar';
+import { Modal } from '@mui/material';
+
+
+
 
 // import editProfMenu from './profileComponents/editProfMenu';
 const Profile = (props) => {
-    const [ profilePicture, setProfPic ] = useState('');
-    const [ showForm, setShowForm] = useState(false);
-    const [ bio, setBio] = useState('');
+    const [ profilePic, setProfilePic ] = useState();
+    const [bio, setBio] = useState('artistBio');
+    const [isOpen, setIsOpen] = useState(false);
+    const [artistName ,setArtistName] = useState();
+    const [collection, setCollection] = useState();
+    useEffect( () =>{
+        Axios.get('http://localhost:3000/api/artists').then((data) => {
+            // console.log("Artist Data:", data.data[2]);
+            let artist = data.data[2];
+            setBio(artist.bio);
+            setProfilePic(artist.profile_image_url)
+            setArtistName(artist.name)
+        })
+        // const loadPage = async () =>{
+        //    const reqOptions ={
+        //     method: 'GET',
+        //     headers: { 'Content-Type': 'application/json' }
+        //   }
+        // const response = await fetch('http://localhost:3000/api/profile/artist', reqOptions)
+        // const data = await response.json();
+        // console.log(data); 
+        // }
+        // loadPage();
+    }, []);
     
-    const handleChange = (event) => {
-        //sets email and password in state, from user input        
-        
-        console.log('hello')
-        return (
-            <div>
-            <EditProfMenu/>
-            </div>
-        )
-    }
- 
+    
 
     return(
-        <Sheet variant="outlined"
-            sx={{
-            display: 'flex',
-            flexDirection: 'row',  
-            height: '100vh',
-            width: '100%',
-            alignContent: 'stretch',
-            gap: 2,
-            borderRadius: 'sm',
-            boxShadow: 'md',
-
-            }}> 
-            <Box 
+        <div>
+            <NavBar/>
+            <Sheet 
                 sx={{
-                outline: '1px dashed gray',
-                flex: 3,
-            }}>
-                <Button variant="outlined" onClick={handleChange}>Edit</Button>
-                <ProfilePicture/>
-                <ArtistBio/>
-            </Box>
-            <Box
-                sx={{
-                    flex: 7,
+                display: 'flex',
+                flexDirection: 'row',  
+                height: '100vh',
+                width: '100%',
+                alignContent: 'stretch',
+                gap: 2,
+                borderRadius: 'sm',
+                boxShadow: 'md',
 
+                }}> 
+                
+                <Box 
+                    sx={{
+                    outline: '10px black',
+                    flex: 3,
                 }}>
-                <Calendar/>
-                <ArtistCollection/>
-            </Box>    
-        {showForm ? handleChange(): null}    
-        </Sheet>
-        
+                    <Button onClick={() => setIsOpen(true)}>Edit</Button>
+                    <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+                        <EditProfMenu/>
+                    </Modal >
+                    <ProfilePicture profilePic={profilePic} artistName={artistName}/>
+                    <ArtistBio bio={bio}/>
+                </Box>
+                <Box
+                    sx={{
+                        flex: 7,
+                    }}>
+                    <Calendar/>
+                    <ArtistCollection/>
+                </Box>    
+            {/* {showForm ? handleChange(): null}     */}
+            </Sheet>
+        </div>
             
         
     )

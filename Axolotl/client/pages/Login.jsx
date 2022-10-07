@@ -32,10 +32,12 @@ const Login = (props) => {
         'password': password
       })
     }
-    
-    const response = await fetch('http://localhost:3000/login/user', reqOptions)
+    const response = await fetch('http://localhost:3000/api/login', reqOptions)
     const data = await response.json();
-    // console.log('data');
+    console.log(data);
+    if(data.has_account){
+      <Navigate to="/" replace={true} />
+    }
   };
 
   return (

@@ -11,6 +11,7 @@ const ArtistCollection = (props) => {
                 }}>
                 
                 <h1>Artist Collection</h1>
+                
             </Box>
         
     )
