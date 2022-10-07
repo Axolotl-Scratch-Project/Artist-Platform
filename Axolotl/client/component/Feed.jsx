@@ -82,6 +82,7 @@ const Feed = () => {
       // console.log("feed -> useEffect -> data", data)
       setdata(data.data)
       setSuperData(data.data);
+      console.log('feed page data.data', data.data)
     })
   },[])
 
@@ -108,7 +109,7 @@ const Feed = () => {
             }} */}
 
             { data.map((element,index) => {
-                return <Post key = {index} name = {element.name} bio = {element.bio} bookingrate = {element.hourly_rate} category ={element.categories_array} id = {element.artist_id}/>
+                return <Post key = {index} name = {element.name} bio = {element.bio} bookingrate = {element.hourly_rate} category ={element.categories_array} id = {element.artist_id} profileimage = {element.profile_image_url}/>
             })}
 
           </Grid>

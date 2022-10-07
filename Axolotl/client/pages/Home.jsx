@@ -9,6 +9,7 @@ import { Box,Stack,Grid } from '@mui/material';
 import { Category, PriceChange } from '@mui/icons-material';
 
 const Home = () => {
+  localStorage.clear();
   return (
       <Box>
         <Navbar/>

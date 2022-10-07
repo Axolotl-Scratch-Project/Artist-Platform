@@ -11,13 +11,13 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import TextField from '@mui/material/TextField';
 import Stack from '@mui/material/Stack';
 import { Box } from '@mui/material';
-import { Axios } from 'axios';
+import Axios  from 'axios';
 import { useNavigate } from "react-router-dom";
 import Chip from '@mui/material/Chip';
 
 var rightNow = new Date();
 var res = rightNow.toISOString().slice(0,16)
-console.log(localStorage);
+
 
 const Post = (props) => {
   let navigate = useNavigate()
@@ -35,22 +35,29 @@ const Post = (props) => {
     setendTime(e.target.value);
   };
 
-  const onclick = async(e) => {
+  const handleProfileChange = (e) =>{
+    window.localStorage.setItem('artistID', JSON.stringify(props.id));
+    navigate('/profile')
+  }
+
+  const onclick = async (e) => {
     e.preventDefault()
     const amount = Math.round((new Date(endTime) - new Date(startTime)) / 3600000 * props.bookingrate);    // setstartPrice(amount)
     setstartPrice(amount)
-    // if(!localStorage.getItem(bookerId)) {
-    //   navigate('/signup')
-    // } else if (localStorage.getItem(bookerId)){
-    //   let infor = {artistID:props.id,
-    //     bookerId:localStorage.getItem(bookerId),
-    //     bookerType:localStorage.getItem(bookerType)
-    //     bookingsStart:startTime,
-    //     bookingsEnd:endTime,
-    //     hourly_rate:props.bookingrate}
-    // await Axios.post('http://localhost:8080/api/checkout',infor)
-    // }
-    console.log('hello')
+    if(!localStorage.getItem('userType')) {
+      navigate('/signup')
+    } else if (localStorage.getItem('userType')){
+      let infor = {artistID:props.id,
+        bookerId:localStorage.getItem('userId'),
+        bookerType:localStorage.getItem('userType'),
+        bookingsStart:startTime,
+        bookingsEnd:endTime,
+        hourly_rate:props.bookingrate}
+
+        window.localStorage.setItem('bookerId', localStorage.getItem('userId'));
+        window.localStorage.setItem('bookerType', localStorage.getItem('userType'));
+    await Axios.post("http://localhost:8080/api/checkout",{infor})
+    }
   };
 
 
@@ -61,7 +68,13 @@ const Post = (props) => {
         component="img"
         alt="green iguana"
         height="140"
-        image="https://i.natgeofe.com/n/de94c416-6d23-45f5-9708-e8d56289268e/naturepl_01132178.jpg?w=636&h=631"
+        // bottom="-80px"
+        // position="absolute"
+        // top="0px"
+        // image="https://i.natgeofe.com/n/de94c416-6d23-45f5-9708-e8d56289268e/naturepl_01132178.jpg?w=636&h=631"
+        image={props.profileimage}
+        sx={{objectFit: "cover",
+        objectPosition: 'center -30px'}}
       />
       <CardContent>
         <Box style={{display:'flex', justifyContent: 'space-between', alignItems: 'center'}}>
@@ -92,7 +105,7 @@ const Post = (props) => {
         <Button onClick= {onClick} style= {{ marginLeft:'0px'}} size="small">Book Now</Button>
         <p>|</p>
         <Button style={{minWidth:'32px',marginLeft:'0px'}}><AddCircleIcon color="primary" /></Button>
-        <Button style= {{ marginLeft:'0px'}} size="small">View Full Profile</Button>
+        <Button style= {{ marginLeft:'0px'}} size="small" onClick={handleProfileChange}>View Full Profile</Button>
       </CardActions>
 
       <Box style={{display:'flex',justifyContent:'space-between',alignContent:'center'}}>
