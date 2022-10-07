@@ -13,6 +13,7 @@ import Stack from '@mui/material/Stack';
 import { Box } from '@mui/material';
 import { Axios } from 'axios';
 import { useNavigate } from "react-router-dom";
+import Chip from '@mui/material/Chip';
 
 var rightNow = new Date();
 var res = rightNow.toISOString().slice(0,16)
@@ -67,9 +68,13 @@ const Post = (props) => {
         <Typography gutterBottom variant="h5" component="div">
           {props.name}
         </Typography>
-        <Typography gutterBottom variant="h7" component="div">
+        {/* <Typography gutterBottom variant="h7" component="div">
         {props.genre}
-        </Typography>
+        </Typography> */}
+        <Stack direction="row" spacing={1}>
+          {props.category.map((element,index) => <Chip key = {index} label={element} size="small"/>)}
+        </Stack>
+
         </Box>
         <Typography variant="body2" color="text.secondary">
           {props.bio}
