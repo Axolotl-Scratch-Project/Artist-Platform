@@ -79,11 +79,45 @@ app.get('/api/isLoggedIn', (req, res, next) => {
   }
 });
 
+
 // BOOKINGS
-  app.post('/api/booking', bookingController.createBooking, (req, res) => {
-    // create a booking in booking table
-    return res.status(200).json({ newBooking: res.locals.newBooking });
-  })
+// Create booking + Stripe API
+app.post('/api/checkout', bookingController.createBooking, async(req, res) => {
+  //get artistid from booking controller
+  const artistRate = req.body.hourly_rate;
+  const hours = req.body.hours;
+  try {
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ['card'],
+      mode: 'payment',
+      line_items: [
+        {
+          price_data: {
+            currency: 'usd',
+            product_data: { name: 'artist_booking'},
+            // unit_amount: artistRate * 100,
+            unit_amount: 50 * 100,
+          },
+          // quantity: hours,
+          quantity: 1,
+        }
+      ],
+      success_url:`${process.env.SERVER_URL}/bookings.html`,
+      cancel_url:`${process.env.SERVER_URL}/home.html`,
+    })
+    res.json({ url: session.url })
+    // console.log(res.json({ url: session.url }))
+  } catch(e) {
+    res.status(500).json({error: e.message});
+  }
+
+});
+
+
+  // app.post('/api/booking', bookingController.createBooking, (req, res) => {
+  //   // create a booking in booking table
+  //   return res.status(200).json({ newBooking: res.locals.newBooking });
+  // });
 
 
   //changed get request to post request to pass req.body, changed end point to differentiate above endpoint
@@ -156,39 +190,6 @@ app.get('/api/profile/artist/links', artistController.getPortfolioGalleryLinks, 
 
 app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../client/index.html'));
-});
-
-
-//Stripe API
-app.post('/api/checkout', async(req, res) => {
-  //get artistid from booking controller
-  const artistRate = req.body.hourly_rate;
-  const hours = req.body.hours;
-  try {
-    const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      mode: 'payment',
-      line_items: [
-        {
-          price_data: {
-            currency: 'usd',
-            product_data: { name: 'artist_booking'},
-            // unit_amount: artistRate * 100,
-            unit_amount: 50 * 100,
-          },
-          // quantity: hours,
-          quantity: 1,
-        }
-      ],
-      success_url:`${process.env.SERVER_URL}/bookings.html`,
-      cancel_url:`${process.env.SERVER_URL}/home.html`,
-    })
-    res.json({ url: session.url })
-    // console.log(res.json({ url: session.url }))
-  } catch(e) {
-    res.status(500).json({error: e.message});
-  }
-
 });
 
 

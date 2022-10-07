@@ -43,9 +43,13 @@ bookingController.getBookings = async (req, res, next) => {
   console.log('bookingController.getBookings invoked');
   try {
     const { bookerId, bookerType } = req.body;
+    // THIS ASSUMES THAT ONLY USERS CAN MAKE BOOKINGS
     const bookingsByUserIdQuery = `
-      select *
+      select
+      b.id, b.artist_id, art.name as artist_name, b.amount, b.booking_start, b.booking_end, b.booker_id, b.booker_type, u.name as booker_name
       from bookings as b
+      inner join artists as art on b.artist_id = art.id
+      inner join users as u on b.booker_id = u.id
       where b.booker_id = $1 and b.booker_type = $2
     `;
     let bookingsByUserId;
