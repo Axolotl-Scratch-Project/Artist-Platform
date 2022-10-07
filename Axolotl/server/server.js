@@ -70,7 +70,7 @@ app.get('/api/isLoggedIn', (req, res, next) => {
       res.status(200).json({ user: '', userType: '' })
     } else {
       const verified = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("isLoggedIn", verified);
+      console.log("isLoggedIn -> token body?", verified);
       res.status(200).json({ user: verified.user, userType: verified.usertype })
     }
     return next();
