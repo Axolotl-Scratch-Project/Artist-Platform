@@ -36,7 +36,7 @@ const Signup = () => {
         // window.localStorage.setItem('testing', JSON.stringify())
         const artistData = res.data.artistData;
         window.localStorage.setItem('artistId', JSON.stringify(artistData.id));
-        window.localStorage.setItem('userType', JSON.stringify('artist'));
+        window.localStorage.setItem('userType', JSON.stringify("artist"));
         navigate("/signup/redirect");
       })
     }
@@ -45,7 +45,7 @@ const Signup = () => {
         //need to redirect to diff home page based on user type- waiting on Raymond's main page
         const userData = res.data.newUserData;
         window.localStorage.setItem('userId', JSON.stringify(userData.id));
-        window.localStorage.setItem('userType', JSON.stringify('user'));
+        window.localStorage.setItem('userType', JSON.stringify("user"));
         navigate("/signup/redirect");
       })
     }
