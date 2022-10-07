@@ -31,7 +31,9 @@ bookingController.createBooking = async (req, res, next) => {
     `;
     // console.log([bookerId, bookerType, artistId, amount, bookingStart, bookingEnd]);
     const newBooking = await db.query(createBookingQuery, [bookerId, 'user', artistId, amount, bookingStart, bookingEnd]);
-    // console.log("bookingController -> createBooking -> newBooking.rows[0]", newBooking.rows[0])
+    console.log("bookingController -> createBooking -> newBooking.rows[0]", newBooking.rows[0])
+    const hours = (new Date(bookingEnd) - new Date(bookingStart)) / 3600000;
+
     res.locals.newBooking = newBooking.rows[0];
     return next();
   } catch (err) {
