@@ -54,6 +54,30 @@ bookingController.getBookings = async (req, res, next) => {
     `;
     let bookingsByUserId;
     if (bookerType === 'artist') {
+      const artistBusinessBookingsQuery = `
+      select
+      b.id, b.artist_id, artists.name as artist_name, b.amount, b.booking_start, b.booking_end, b.booker_id, b.booker_type, artists.name as booker_name
+      from bookings as b
+      inner join artists on b.booker_id = artists.id and b.booker_type = 'artist'
+      where b.artist_id = $1
+
+      union all
+
+      select
+      b.id, b.artist_id, artists.name as artist_name, b.amount, b.booking_start, b.booking_end, b.booker_id, b.booker_type, users.name as booker_name
+      from bookings as b
+      inner join users on b.booker_id = users.id and b.booker_type = 'user'
+      inner join artists on b.artist_id = artists.id
+      where b.artist_id = $1
+      `;
+      const artistBusinessBookings = await db.query(artistBusinessBookingsQuery, [bookerId]);
+      const artistPersonalBookingsQuery = `
+      select
+      b.id, b.artist_id, art.name as artist_name, b.amount, b.booking_start, b.booking_end, b.booker_id, b.booker_type, art.name as booker_name
+      from bookings as b
+      inner join artists as art on b.artist_id = art.id
+      where b.booker_id = $1
+      `;
       bookingsByUserId = await db.query(bookingsByUserIdQuery, [bookerId, 'artist']);
     } else {
       bookingsByUserId = await db.query(bookingsByUserIdQuery, [bookerId, 'user']);
