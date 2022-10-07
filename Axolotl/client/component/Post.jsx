@@ -35,6 +35,11 @@ const Post = (props) => {
     setendTime(e.target.value);
   };
 
+  const handleProfileChange = (e) =>{
+    window.localStorage.setItem('artistID', JSON.stringify(props.id));
+    navigate('/profile')
+  }
+
   const onclick = async (e) => {
     e.preventDefault()
     const amount = Math.round((new Date(endTime) - new Date(startTime)) / 3600000 * props.bookingrate);    // setstartPrice(amount)
@@ -94,7 +99,7 @@ const Post = (props) => {
         <Button onClick= {onClick} style= {{ marginLeft:'0px'}} size="small">Book Now</Button>
         <p>|</p>
         <Button style={{minWidth:'32px',marginLeft:'0px'}}><AddCircleIcon color="primary" /></Button>
-        <Button style= {{ marginLeft:'0px'}} size="small">View Full Profile</Button>
+        <Button style= {{ marginLeft:'0px'}} size="small" onClick={handleProfileChange}>View Full Profile</Button>
       </CardActions>
 
       <Box style={{display:'flex',justifyContent:'space-between',alignContent:'center'}}>
