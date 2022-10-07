@@ -18,12 +18,12 @@ artistController.saveArtist = async (req, res, next) => {
     throw new Error ('A user with this email already exists');
   } else {
     // creating a new artist in the DB
-    const createUserQuery = `
+    const createArtistQuery = `
       INSERT INTO artists (email, name, password, location)
       VALUES ($1, $2, $3, $4)
       RETURNING *
     `;
-    const newUser = await db.query(createUserQuery, [email, displayName, password, loc]);
+    const newUser = await db.query(createArtistQuery, [email, displayName, password, loc]);
     res.locals.artistData = newUser.rows[0];
     // create a new portfolio
     const createPortfolioQuery = `
@@ -58,16 +58,16 @@ artistController.getCategories = (req, res, next) => {
 artistController.getAllArtists = (req, res, next) => {
   console.log("getAllArtists")
   const query = `
-    SELECT artists.id as artist_id, artists.name, artists.email, artists.location, artists.hourly_rate, portfolios.bio, portfolios.profile_image_url, portfolios.homepage_url, artcat.categories_array 
-    FROM artists 
-    JOIN portfolios 
-    ON artists.id = portfolios.artist_id 
+    SELECT artists.id as artist_id, artists.name, artists.email, artists.location, artists.hourly_rate, portfolios.bio, portfolios.profile_image_url, portfolios.homepage_url, artcat.categories_array
+    FROM artists
+    JOIN portfolios
+    ON artists.id = portfolios.artist_id
     JOIN (
-      SELECT artists.id, array_agg(categories.category) as categories_array FROM artists 
-      JOIN artist_categories 
-      ON artists.id = artist_categories.artist_id 
-      JOIN categories 
-      ON categories.id = artist_categories.category_id group by artists.id) artcat 
+      SELECT artists.id, array_agg(categories.category) as categories_array FROM artists
+      JOIN artist_categories
+      ON artists.id = artist_categories.artist_id
+      JOIN categories
+      ON categories.id = artist_categories.category_id group by artists.id) artcat
       ON artists.id = artcat.id`;
 
   db.query(query)
@@ -90,13 +90,13 @@ artistController.getProfile = (req, res, next) => {
   JOIN portfolios ON artists.id = portfolios.artist_id
   JOIN (
     SELECT artists.id, array_agg(categories.category) as categories_array FROM artists
-    JOIN artist_categories 
-    ON artists.id = artist_categories.artist_id 
-    JOIN categories 
-    ON categories.id = artist_categories.category_id 
+    JOIN artist_categories
+    ON artists.id = artist_categories.artist_id
+    JOIN categories
+    ON categories.id = artist_categories.category_id
     GROUP BY artists.id
-  ) artcat 
-  ON artists.id = artcat.id 
+  ) artcat
+  ON artists.id = artcat.id
   WHERE artists.id = ${id}`;
 
   db.query(query)
@@ -124,7 +124,7 @@ artistController.editProfile = async (req, res, next) => {
     profile_image_url = '${profile_image_url}',
     homepage_url = '${homepage_url}'
     WHERE artist_id = ${artist_id};
-    
+
     UPDATE artists
     SET hourly_rate = '${hourly_rate}',
     location = '${location}'
@@ -157,7 +157,7 @@ artistController.editProfile = async (req, res, next) => {
       for (let i = 0; i < categories_array.length; i++) {
         const current = categories_array[i];
         console.log('current category', current)
-        const queryCheck = `SELECT EXISTS(SELECT 1 FROM artist_categories 
+        const queryCheck = `SELECT EXISTS(SELECT 1 FROM artist_categories
           WHERE artist_id = ${artist_id})`;
 
         const isValidCategory = await db.query(queryCheck);
