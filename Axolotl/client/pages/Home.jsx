@@ -3,8 +3,8 @@ import Feed from '../component/Feed'
 import Navbar from '../component/Navbar'
 import SideBar from '../component/SideBar'
 import SideBar2 from '../component/SideBar2'
-import UserView from '../component/UserView'
-import UserViewNav from '../component/UserViewNav'
+// import UserView from '../component/UserView'
+// import UserViewNav from '../component/UserViewNav'
 import { Box,Stack,Grid } from '@mui/material';
 import { Category, PriceChange } from '@mui/icons-material';
 
