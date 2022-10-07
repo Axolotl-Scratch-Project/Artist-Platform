@@ -79,7 +79,7 @@ app.get('/api/isLoggedIn', (req, res, next) => {
   }
 });
 
-
+// app.post('/api/checkout', , async(req, res) => {
 // BOOKINGS
 // Create booking + Stripe API
 app.post('/api/checkout', bookingController.createBooking, async(req, res) => {
