@@ -115,12 +115,13 @@ const SideBar2 = (props) => {
                 <MenuItem value={'Bassist'}>Bassist</MenuItem>
                 <MenuItem value={'Dancer'}>Dancer</MenuItem>
                 <MenuItem value={'Painter'}>Painter</MenuItem>
+                <MenuItem value={'All'}>All</MenuItem>
               </Select>
             </FormControl>
         </Box>
         <Grid item>
-          <div style={{ width: "170px" }}>
-            Price
+          <div style={{ width: "165px",marginTop:'15px'}}>
+            Hourly-Rate:
             <Slider
               value={props.formValues.priceRange}
               onChange={props.handleSliderChange("priceRange")}
@@ -130,9 +131,10 @@ const SideBar2 = (props) => {
               // onChange={handleChange}
               valueLabelDisplay="auto"
               getAriaValueText={props.valuetext}
-              min={10}
+              min={0}
               max={2000}
             />
+             ${props.formValues.priceRange[0]} - ${props.formValues.priceRange[1]}
           </div>
         </Grid>
         {/* <Button variant="contained" color="primary" type="submit">

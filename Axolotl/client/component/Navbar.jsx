@@ -162,7 +162,7 @@ const Navbar = () => {
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 1}}>
+          {/* <Box sx={{ flexGrow: 1}}>
               <Search>
                 <SearchIconWrapper>
                   <SearchIcon />
@@ -173,7 +173,7 @@ const Navbar = () => {
                   onChange = {(e)=>{console.log(e.target.value)}}
                 />
               </Search>
-          </Box>
+          </Box> */}
 
             <Box>
           
