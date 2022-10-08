@@ -54,8 +54,8 @@ app.post('/api/login', userController.loginUser, (req, res, next) => {
 app.get('/api/logout', (req, res) => {
   res
     .cookie("token", "", {
-      httpOnly: false,
-      expires: new Date(0),
+      httpOnly: true,
+      // expires: new Date(0),
       secure: true,
       sameSite: "none",
     })
@@ -65,6 +65,10 @@ app.get('/api/logout', (req, res) => {
 // Checking if the user / artist is Logged In
 app.get('/api/isLoggedIn', (req, res, next) => {
   try {
+    console.log("server.js -> isLoggedIn -> req.cookies.token", req.cookies.token)
+    console.log("server.js -> isLoggedIn -> req.cookies", req.cookies)
+    console.log("server.js -> isLoggedIn -> req.headers.cookie", req.headers.cookie)
+
     const token = req.cookies.token;
     if (!token) {
       res.status(200).json({ user: '', userType: '' })
@@ -73,7 +77,6 @@ app.get('/api/isLoggedIn', (req, res, next) => {
       console.log("isLoggedIn -> token body?", verified);
       res.status(200).json({ user: verified.user, userType: verified.usertype })
     }
-    return next();
   } catch (err) {
     return next(err);
   }

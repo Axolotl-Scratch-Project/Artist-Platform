@@ -36,8 +36,8 @@ const Booking = () => {
 
 
   const bookingInfo = {
-    bookerId: 35,
-    bookerType: 'artist'
+    bookerId: JSON.parse(window.localStorage.getItem('userId')),
+    bookerType: JSON.parse(window.localStorage.getItem('userType'))
   }
 
   const [bookings, setBookings] = useState([]);

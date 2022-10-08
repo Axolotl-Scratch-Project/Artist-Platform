@@ -43,7 +43,7 @@ userController.saveUser = async (req, res, next) => {
     res
     .cookie("token", token, {
       httpOnly: true,
-      secure: true,
+      secure: false,
       sameSite: "none",
     });
     res.locals.userData = newUser.rows[0];
@@ -129,7 +129,7 @@ userController.loginUser = async (req, res, next) => {
       res
       .cookie("token", token, {
         httpOnly: true,
-        secure: true,
+        secure: false,
         sameSite: "none",
       });
 

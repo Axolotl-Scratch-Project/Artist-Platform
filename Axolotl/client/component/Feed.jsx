@@ -72,7 +72,7 @@ const Feed = () => {
   //     newData
   //    )
   // };
-  
+
   function valuetext(formValues) {
     return {formValues};
   }
@@ -82,7 +82,10 @@ const Feed = () => {
       // console.log("feed -> useEffect -> data", data)
       setdata(data.data)
       setSuperData(data.data);
-      console.log('feed page data.data', data.data)
+      console.log('Feed -> artist data', data.data)
+    })
+    Axios.get('http://localhost:3000/api/isLoggedIn').then((data) => {
+      console.log('UserView -> isLoggedIn', data);
     })
   },[])
 
