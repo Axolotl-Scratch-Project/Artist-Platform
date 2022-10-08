@@ -185,11 +185,25 @@ app.put('/api/profile/artist', artistController.editProfile, artistController.ge
   return res.status(200).json(res.locals);
 })
 
+
+// display all URLs on artists's portfolio
 // Not being used right now. Sending galleryLinks with /api/profile/artist
 app.get('/api/profile/artist/links', artistController.getPortfolioGalleryLinks, (req, res) => {
-  // display all URLs on artists's portfolio
   return res.status(200).json(res.locals.artistGalleryLinks);
 });
+
+
+// add single new gallery link
+app.post('/api/profile/artist/single-link', artistController.addPortfolioGalleryLink, (req, res) => {
+  return res.status(200).json(res.locals.newGalleryPiece)
+});
+
+
+// delete single gallery link
+app.delete('/api/profile/artist/single-link', artistController.deletePortfolioGalleryLink, (req, res) => {
+  return res.status(200).json(res.locals.deletedPiece)
+});
+
 
 app.get('/', (req, res) => {
   return res.status(200).sendFile(path.join(__dirname, '../client/index.html'));

@@ -151,8 +151,7 @@ artistController.editProfile = async (req, res, next) => {
     location = '${location}'
     WHERE id = ${artist_id};
 
-    DELETE FROM urls WHERE portfolios_id = ${portfolio_id};
-    DELETE FROM artist_categories WHERE artist_id = ${artist_id};
+    --DELETE FROM artist_categories WHERE artist_id = ${artist_id};
     COMMIT;
     `;
 
@@ -161,18 +160,6 @@ artistController.editProfile = async (req, res, next) => {
     try {
       // update main profile info
       const result = await db.query(query);
-
-      // add updated gallery links
-      for (let i = 0; i < artistGalleryLinks.length; i++) {
-        const currentPiece = artistGalleryLinks[i];
-        // console.log('currentpiece', currentPiece)
-        const query2 = `
-          INSERT INTO urls (portfolios_id, gallerypiece_url, gallerypiece_text)
-          VALUES (${portfolio_id}, '${currentPiece.gallerypiece_url}', '${currentPiece.gallerypiece_text}');
-        `
-        const result2 = await db.query(query2);
-        // console.log('result2', result2)
-      }
 
       console.log('categories_array', categories_array)
       for (let i = 0; i < categories_array.length; i++) {
@@ -223,6 +210,127 @@ artistController.getPortfolioGalleryLinks = async (req, res, next) => {
     return next();
   })
 };
+
+
+artistController.addPortfolioGalleryLink = async (req, res, next) => {
+  console.log('addPortfolioGalleryLink')
+  const artist_id = req.query.id;
+  // console.log('req.body', req.body)
+  // console.log('req.body[0]', req.body[0])
+  const { gallerypiece_id, gallerypiece_url, gallerypiece_text , portfolio_id } = req.body[0];
+
+  const queryCheck = `SELECT * FROM urls 
+  WHERE urls.portfolios_id = ${portfolio_id}
+  AND urls.id = ${gallerypiece_id}`;
+
+  const queryInsert = `
+    INSERT INTO urls(gallerypiece_url, gallerypiece_text, portfolios_id)
+    VALUES ('${gallerypiece_url}', '${gallerypiece_text}', ${portfolio_id})
+    RETURNING *
+  `;
+
+  try {
+    if (gallerypiece_id !== null) {
+      const oldGalleryLinks = await db.query(queryCheck);
+      // console.log('result1', oldGalleryLinks.rows)
+
+      if (oldGalleryLinks.rows.length > 0) {
+        throw new Error ('That gallerypiece_id already exists');
+      }
+    }
+    // if no previous links exist in db, add new link
+    else {
+      const newRow = await db.query(queryInsert);
+      res.locals.newGalleryPiece = newRow.rows;
+      console.log('added new gallery piece', res.locals.newGalleryPiece)
+      return next();
+    }
+  } 
+  catch (error) {
+    console.error('error in artistController.addPortfolioGalleryLink:', error);
+    return next(error);
+  }
+}
+
+
+artistController.deletePortfolioGalleryLink = async (req, res, next) => {
+  console.log('deletePortfolioGalleryLink')
+  const artist_id = req.query.id;
+  console.log('req.body', req.body)
+  console.log('req.body[0]', req.body[0])
+  const { gallerypiece_id, gallerypiece_url, gallerypiece_text , portfolio_id } = req.body[0];
+
+  const queryDelete = `
+    DELETE FROM urls WHERE urls.id = ${gallerypiece_id}
+    RETURNING *`;
+
+  try {
+    console.log('entering try')
+   
+    const deletedPiece = await db.query(queryDelete);
+    console.log('deletedPiece', deletedPiece.rows)
+    res.locals.deletedPiece = deletedPiece.rows;
+    console.log('deleted gallery piece', res.locals.deletedPiece)
+    return next();
+  } 
+  catch (error) {
+    console.error('error in artistController.addPortfolioGalleryLink:', error);
+    return next(error);
+  }
+}
+
+
+// artistController.editPortfolioGalleryLinks = async (req, res, next) => {
+//   console.log("editPortfolioGalleryLinks")
+//   const id = req.query.id;
+//   const oldGalleryLinks = res.locals.artistGalleryLinks;
+//   const newGalleryLinks = req.body;
+//   const portfolio_id = newGalleryLinks[0].portfolio_id;
+//   console.log('newGalleryLinks', newGalleryLinks)
+//   console.log('porfolio id', portfolio_id)
+
+//   // add oldGalleryLinks ids into cache as key and index as value
+//   const oldGalleryLinksIdCache = {};
+//   for (let i = 0; i < oldGalleryLinks.length; i++) {
+//     oldGalleryLinksIdCache[oldGalleryLinks[i].gallerypiece_id] = i;
+//   }
+//   console.log('oldGalleryLinksIdCache', oldGalleryLinksIdCache)
+
+//   // add newGalleryLinks ids into cache as key and index as value
+//   const newGalleryLinksIdCache = {};
+//   for (let i = 0; i < newGalleryLinks.length; i++) {
+//     console.log(`newGalleryLinks[${i}]`, newGalleryLinks[i])
+//     if (newGalleryLinks[i].hasOwnProperty('gallerypiece_id')) {
+//       newGalleryLinksIdCache[newGalleryLinks[i].gallerypiece_id] = i;
+//     }
+//   }
+
+//   console.log('newGalleryLinksIdCache', newGalleryLinksIdCache)
+
+//   // iterate through new collection to see if gallery link is already in cache. if not add it.
+//   for (let i = 0; i < newGalleryLinks.length; i++) {
+//     const query = `
+//       INSERT INTO urls(gallerypiece_url, gallerypiece_text, portfolios_id)
+//       VALUES ('${newGalleryLinks[i].gallerypiece_url}', '${newGalleryLinks[i].gallerypiece_text}', ${newGalleryLinks[i].portfolio_id})
+//       `;
+//     // if new link does not have an id, add new link
+//     if (!newGalleryLinks[i].gallerypiece_id) {
+//       // insert link
+//     } 
+//     else {
+//       // verify id doesn't already exist in db
+//       let newPieceId = newGalleryLinks[i].gallerypiece_id;
+//       console.log('newPieceId', newPieceId)
+//       if (!newPieceId in oldGalleryLinksIdCache) {
+//         // insert link
+//       }
+//     }
+//   }
+
+//   //
+
+//   return next();
+// }
 
 
 module.exports = artistController;
