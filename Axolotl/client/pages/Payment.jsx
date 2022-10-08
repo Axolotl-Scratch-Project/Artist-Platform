@@ -16,13 +16,13 @@
 // }
 
 button.addEventListener('click', () => {
-  fetch('/api/checkout', {
+  fetch('http://localhost:3000/api/checkout', {
     method: 'POST',
     headers: {
       'Content Type': 'application/json'
     },
     body: JSON.stringify({
-      artistId: {artistId},
+
       //do we want frontend to query here?
       bookerId: {bookerId},
       bookerType: {bookerType},
@@ -40,3 +40,4 @@ button.addEventListener('click', () => {
     console.error(e.error)
   })
 })
+
