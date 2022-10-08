@@ -54,7 +54,7 @@ app.post('/api/login', userController.loginUser, (req, res, next) => {
 app.get('/api/logout', (req, res) => {
   res
     .cookie("token", "", {
-      httpOnly: true,
+      httpOnly: false,
       expires: new Date(0),
       secure: true,
       sameSite: "none",
