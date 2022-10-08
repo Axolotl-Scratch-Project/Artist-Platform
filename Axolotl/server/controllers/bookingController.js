@@ -11,7 +11,9 @@ bookingController.createBooking = async (req, res, next) => {
     let { bookerId, bookerType, artistID, bookingsStart, bookingsEnd } = req.body.infor;
     // search for whether an overlapping booking exists
     // console.log("bookingController -> createBooking -> req body infor", bookerId, bookerType, artistID, bookingStart, bookingEnd)
-
+    console.log("createBooking -> bookerType", bookerType)
+    bookerType = bookerType.replace(/\"/g, "");
+    console.log("createBooking -> bookerType", bookerType)
     const availabilityCheck = ``;
     const artistHourlyQuery = `
     select artists.hourly_rate, artists.name
@@ -55,7 +57,7 @@ bookingController.createBooking = async (req, res, next) => {
 bookingController.getBookings = async (req, res, next) => {
   console.log('bookingController.getBookings invoked');
   try {
-    const { bookerId, bookerType } = req.body;
+    let { bookerId, bookerType } = req.body;
     if (bookerType === 'artist') {
       const artistBusinessBookingsQuery = `
       with bookings as (
@@ -107,6 +109,10 @@ bookingController.getBookings = async (req, res, next) => {
         inner join users as u on b.booker_id = u.id
         where b.booker_id = $1 and b.booker_type = $2
         `;
+        // console.log("bookerType", bookerType)
+        // bookerType = bookerType.replace(/\"/g, "");
+        // console.log("bookerType", bookerType)
+        // bookerType = bookerType.slice(1, bookerType.length - 1);
         const userPersonalBookings = await db.query(userPersonalBookingsQuery, [bookerId, bookerType]);
         console.log("getBookings -> userPersonalBookings", userPersonalBookings)
         res.locals.bookings = { personalBookings: userPersonalBookings.rows, businessBookings: {} };
