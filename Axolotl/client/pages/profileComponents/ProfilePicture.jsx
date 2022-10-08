@@ -1,63 +1,35 @@
-import { Avatar } from '@mui/material';
+import { Textarea } from '@mui/joy';
+import { Avatar, TextField } from '@mui/material';
 import { Box } from '@mui/system';
 import { useState } from 'react';
 
 const ProfilePicture = (props) => {
-    const [profilePic, setProfilePic] = useState('');
-    const [edit, setEdit] = useState(false);
-
-    const getUrl = () => {
-        
-            // return(
-            //     <Typography
-            //         // sx={{
-            //         //         display: 'flex',
-            //         //         justifyContent: 'center',
-            //         //         maxWidth: "25%",
-            //         //         whiteSpace: 'nowrap'
-            //         //     }}
-            //     >
-            //         <TextField
-            //             value={profilePic}
-            //             name="profile picture"
-            //             type="text"
-            //             placeholder='Enter a new url for your profile picture'
-            //             label="profile picture"
-            //             // onChange={handleChange}
-            //             // onSubmit={setEdit(false)}
-            //         >
-            //         </TextField>
-            //         <Button
-            //             sx={{
-            //                  mt: 1,
-                             
-            //             }}>
-            //             Submit
-            //         </Button>
-            //     </Typography>
-            // );
-        }
 
 return (
     <Box sx={{
         display: 'flex',
         justifyContent: 'center',
+        flexDirection: 'column',
+        alignItems: 'center',
+        maxWidth: '100%',
         mx: 'auto',
-        my: 5, // margin top & botom
-        py: 3, // padding top & bottom
-        px: 2
+        my: 5, 
+        py: 5, 
+        px: 2,
+        pb: 15,
+        borderBottom: 1
     }}>
+        <h2>{props.artistName}</h2>
         <Avatar 
             sx={{
                 width: 150,
-                height: 150
+                height: 150,
             }}
             alt="Profile picture" 
-            // src={profilePic} 
-            onClick={() => setEdit(true)}
+            src={props.profilePic} 
+            // onClick={() => setEdit(true)}
 
         />
-        {edit ? getUrl(): null}
     </Box> 
     )
 };

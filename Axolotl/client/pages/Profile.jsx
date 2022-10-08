@@ -1,68 +1,107 @@
-import { CssVarsProvider } from '@mui/joy/styles';
 import Sheet from '@mui/joy/Sheet';
-import Typography from '@mui/joy/Typography';
-import TextField from '@mui/joy/TextField';
 import Button from '@mui/joy/Button';
-import { Avatar } from '@mui/material';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ProfilePicture from './profileComponents/ProfilePicture';
 import ArtistCollection from './profileComponents/ArtistCollection';
+import EditProfMenu from './profileComponents/EditProfMenu';
 import {Box} from '@mui/system';
 import Calendar from './profileComponents/Calendar';
 import ArtistBio from './profileComponents/ArtistBio';
-import EditProfMenu from './profileComponents/EditProfMenu';
+import Axios from 'axios';
+import NavBar from '../component/Navbar';
+import { Modal } from '@mui/material';
+import { shadows } from '@mui/system';
+
+
 
 // import editProfMenu from './profileComponents/editProfMenu';
 const Profile = (props) => {
-    const [ profilePicture, setProfPic ] = useState('');
-    const [ showForm, setShowForm] = useState(false);
-    const [ bio, setBio] = useState('');
+    const [ profilePic, setProfilePic ] = useState();
+    const [bio, setBio] = useState('artistBio');
+    const [isOpen, setIsOpen] = useState(false);
+    const [artistName ,setArtistName] = useState();
+    const [collection, setCollection] = useState();
+    const [userId, setUserId] = useState();
+
+    let getRequest = 'http://localhost:3000/api/profile/artist/?id='.concat(localStorage.getItem("artistID"));
+
+
+    // useEffect( () =>{
+
+    //     Axios.get('http://localhost:3000/api/profile/artist/?id=2').then((data) => {
+    //         const artist = data.data.artistProfile;
+    //         console.log(artist);
+    //         // const gallery = data.data.artistGalleryLinks;
+    //         // let newCollection = [];
+    //         setBio(artist.bio);
+    //         setProfilePic(artist.profile_image_url);
+    //         setArtistName(artist.name);
+    //         // gallery.map((url) => {
+    //         //     newCollection.push(url.gallerypiece_url);
+    //         // });
+    //         // setCollection(newCollection);
+    //     })
+    // }, []);
+    useEffect( () =>{
+        Axios.get(getRequest).then((data) => {
+
+            const artist = data.data.artistProfile;
+            const gallery = data.data.artistGalleryLinks;
+            let newCollection = [];
+            setBio(artist.bio);
+            setProfilePic(artist.profile_image_url);
+            setArtistName(artist.name);
+            gallery.map((url) => {
+                newCollection.push(url.gallerypiece_url);
+            });
+            setCollection(newCollection);
+        })
+
+    }, []);
     
-    const handleChange = (event) => {
-        //sets email and password in state, from user input        
-        
-        console.log('hello')
-        return (
-            <div>
-            <EditProfMenu/>
-            </div>
-        )
-    }
- 
+    
 
     return(
-        <Sheet variant="outlined"
-            sx={{
-            display: 'flex',
-            flexDirection: 'row',  
-            height: '100vh',
-            width: '100%',
-            alignContent: 'stretch',
-            gap: 2,
-            borderRadius: 'sm',
-            boxShadow: 'md',
-
-            }}> 
-            <Box 
+        <div>
+            <NavBar/>
+            <Sheet 
                 sx={{
-                outline: '1px dashed gray',
-                flex: 3,
-            }}>
-                <Button variant="outlined" onClick={handleChange}>Edit</Button>
-                <ProfilePicture/>
-                <ArtistBio/>
-            </Box>
-            <Box
-                sx={{
-                    flex: 7,
+                display: 'flex',
+                flexDirection: 'row',  
+                height: '100vh',
+                width: '100%',
+                alignContent: 'stretch',
+                gap: 2,
+                borderRadius: 'sm',
+                boxShadow: 'md',
 
+                }}> 
+                
+                <Box 
+                    sx={{
+                    outline: '10px black',
+                    flex: 3,
+                    backgroundColor: '#FFFFF',
+                    borderRight: 1,
+                    boxShadow: 1
                 }}>
-                <Calendar/>
-                <ArtistCollection/>
-            </Box>    
-        {showForm ? handleChange(): null}    
-        </Sheet>
-        
+                    <Button onClick={() => setIsOpen(true)}>Edit</Button>
+                    {/* <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+                        <EditProfMenu/>
+                    </Modal > */}
+                    <ProfilePicture profilePic={profilePic} artistName={artistName}/>
+                    <ArtistBio bio={bio}/>
+                </Box>
+                <Box
+                    sx={{
+                        flex: 7,
+                    }}>
+                    
+                    <Calendar/>
+                    <ArtistCollection collection={collection}/>
+                </Box>    
+            </Sheet>
+        </div>
             
         
     )
