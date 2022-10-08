@@ -108,7 +108,9 @@ bookingController.getBookings = async (req, res, next) => {
         where b.booker_id = $1 and b.booker_type = $2
         `;
         const userPersonalBookings = await db.query(userPersonalBookingsQuery, [bookerId, bookerType]);
+        console.log("getBookings -> userPersonalBookings", userPersonalBookings)
         res.locals.bookings = { personalBookings: userPersonalBookings.rows, businessBookings: {} };
+        console.log("bookingController -> getBookings", userPersonalBookings.rows)
     }
     return next();
   } catch (err) {
