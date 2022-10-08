@@ -41,6 +41,7 @@ export default function BookingTable({bookings}) {
           <TableRow>
             <StyledTableCell>Booking ID</StyledTableCell>
             <StyledTableCell align="center">Artist Name</StyledTableCell>
+            <StyledTableCell align="center">Booker Name</StyledTableCell>
             <StyledTableCell align="center">Start Time</StyledTableCell>
             <StyledTableCell align="center">End Time</StyledTableCell>
 
@@ -53,6 +54,7 @@ export default function BookingTable({bookings}) {
                 {booking.id}
               </StyledTableCell>
               <StyledTableCell align="center">{booking.artist_name}</StyledTableCell>
+              <StyledTableCell align="center">{booking.booker_name}</StyledTableCell>
               <StyledTableCell align="center">{booking.booking_start}</StyledTableCell>
               <StyledTableCell align="center">{booking.booking_end}</StyledTableCell>
             </StyledTableRow>
