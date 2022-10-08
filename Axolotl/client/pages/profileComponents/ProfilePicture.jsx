@@ -19,6 +19,7 @@ return (
         pb: 15,
         borderBottom: 1
     }}>
+    
         <h2>{props.artistName}</h2>
         <Avatar 
             sx={{

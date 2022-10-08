@@ -20,7 +20,7 @@ const Profile = (props) => {
     const [bio, setBio] = useState('artistBio');
     const [isOpen, setIsOpen] = useState(false);
     const [artistName ,setArtistName] = useState();
-    const [collection, setCollection] = useState();
+    const [collection, setCollection] = useState([]);
     const [userId, setUserId] = useState();
 
     let getRequest = 'http://localhost:3000/api/profile/artist/?id='.concat(localStorage.getItem("artistID"));
@@ -52,7 +52,10 @@ const Profile = (props) => {
             setProfilePic(artist.profile_image_url);
             setArtistName(artist.name);
             gallery.map((url) => {
-                newCollection.push(url.gallerypiece_url);
+                const galleryPiece = {};
+                galleryPiece.url = url.gallerypiece_url;
+                galleryPiece.text = url.gallerypiece_text;
+                newCollection.push(galleryPiece);
             });
             setCollection(newCollection);
         })
@@ -74,30 +77,34 @@ const Profile = (props) => {
                 gap: 2,
                 borderRadius: 'sm',
                 boxShadow: 'md',
-
+                fontFamily: 'Arial'
                 }}> 
                 
                 <Box 
                     sx={{
-                    outline: '10px black',
-                    flex: 3,
-                    backgroundColor: '#FFFFF',
-                    borderRight: 1,
-                    boxShadow: 1
-                }}>
+                        outline: '10px black',
+                        flex: 3,
+                        backgroundColor: '#FFFFF',
+                        borderRight: 1,
+                        boxShadow: 1,
+                        minWidth: 400
+                    }}>
                     <Button onClick={() => setIsOpen(true)}>Edit</Button>
                     {/* <Modal open={isOpen} onClose={() => setIsOpen(false)}>
                         <EditProfMenu/>
                     </Modal > */}
-                    <ProfilePicture profilePic={profilePic} artistName={artistName}/>
+                    <ProfilePicture profilePic={profilePic} artistName={artistName}
+
+                    />
                     <ArtistBio bio={bio}/>
                 </Box>
                 <Box
                     sx={{
                         flex: 7,
                     }}>
+
+                    {/* <Calendar/> */}
                     
-                    <Calendar/>
                     <ArtistCollection collection={collection}/>
                 </Box>    
             </Sheet>
