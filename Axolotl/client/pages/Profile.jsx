@@ -11,6 +11,7 @@ import Axios from 'axios';
 import NavBar from '../component/Navbar';
 import { Modal } from '@mui/material';
 import { shadows } from '@mui/system';
+import UserViewNav from '../component/UserViewNav'
 
 
 
@@ -58,16 +59,16 @@ const Profile = (props) => {
         })
 
     }, []);
-    
-    
+
+
 
     return(
         <div>
-            <NavBar/>
-            <Sheet 
+            <UserViewNav/>
+            <Sheet
                 sx={{
                 display: 'flex',
-                flexDirection: 'row',  
+                flexDirection: 'row',
                 height: '100vh',
                 width: '100%',
                 alignContent: 'stretch',
@@ -75,9 +76,9 @@ const Profile = (props) => {
                 borderRadius: 'sm',
                 boxShadow: 'md',
 
-                }}> 
-                
-                <Box 
+                }}>
+
+                <Box
                     sx={{
                     outline: '10px black',
                     flex: 3,
@@ -96,14 +97,14 @@ const Profile = (props) => {
                     sx={{
                         flex: 7,
                     }}>
-                    
+
                     <Calendar/>
                     <ArtistCollection collection={collection}/>
-                </Box>    
+                </Box>
             </Sheet>
         </div>
-            
-        
+
+
     )
 }
 
