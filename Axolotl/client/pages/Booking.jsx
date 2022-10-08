@@ -20,12 +20,6 @@ const Booking = () => {
   const activeStyle = {fontSize: '23px', color: '#4caf50', fontFamily: 'Arial'}
 
 
-  //get user info from localStoage
-  // const bookingInfo = {
-  //   bookerId: JSON.parse(window.localStorage.getItem('userId')),
-  //   bookerType: JSON.parse(window.localStorage.getItem('user'))
-  // }
-
   //formate date- talk to Peter about adding to create booking and get booking controller
   const formatDate = (dateString) => {
     const newDate = dateString.slice(0, dateString.length-1) + dateString[dateString.length-1];
@@ -35,20 +29,34 @@ const Booking = () => {
   };
 
 
+  // const bookingInfo = {
+  //   bookerId: 82,
+  //   bookerType: 'user'
+  // }
+
+  // const bookingInfo = {
+  //   bookerId: JSON.parse(window.localStorage.getItem('userId')),
+  //   bookerType: JSON.parse(window.localStorage.getItem('userType'))
+  // }
   const bookingInfo = {
-    bookerId: JSON.parse(window.localStorage.getItem('userId')),
-    bookerType: JSON.parse(window.localStorage.getItem('userType'))
+    bookerId: window.localStorage.getItem('userId'),
+    bookerType: window.localStorage.getItem('userType').replace(/\"/g, "")
+    // bookerType = bookerType.replace(/\"/g, "");
   }
 
   const [bookings, setBookings] = useState([]);
+  const [bizBookings, setBizBookings] = useState([]);
   const [latestBooking, setLatestBooking] = useState({});
 
+
   useEffect(() => {
+    console.log(bookingInfo);
     axios.post('/api/getBooking', bookingInfo).then(res => {
       // localstorage
       // create a variable
       console.log(res.data);
-      const reformatBooking = res.data.bookings.personalBookings.map(booking => {
+
+      const reformatPersonalBooking = res.data.bookings.personalBookings.map(booking => {
         booking.booking_start = formatDate(booking.booking_start);
         booking.booking_end =  formatDate(booking.booking_end);
         return booking;
@@ -67,8 +75,9 @@ const Booking = () => {
       //   return booking;
       // })
       // setBookings(res.data.bookingsByUser);
-      setBookings(reformatBooking);
-      setLatestBooking(reformatBooking[reformatBooking.length - 1]);
+      setBookings(reformatPersonalBooking);
+      setLatestBooking(reformatPersonalBooking[reformatPersonalBooking.length - 1]);
+      setBizBookings(reformatArtistBusinessBooking);
     })
   }, []);
 
@@ -88,10 +97,16 @@ const Booking = () => {
         </div>
       </Box>
       <Box style = {tableStyle}>
-        <p style = {activeStyle} variant="h5">Your Active Bookings </p>
+        <p style = {activeStyle} variant="h5">Your Active Personal Bookings </p>
         <BookingTable bookings = {bookings} />
       </Box>
+      <Box style = {tableStyle}>
+        {bookingInfo.bookerType === 'artist' ? 'Show': 'Hide'}
+        <p style = {activeStyle} variant="h5">Your Active Business Bookings </p>
+        <BookingTable bookings = {bizBookings} />
+      </Box>
       </Paper>
+
 
     {/* </Paper> */}
   </Grid>
