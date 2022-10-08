@@ -1,10 +1,9 @@
 import { Box } from "@mui/system"
+import { getCalendarOrClockPickerUtilityClass } from "@mui/x-date-pickers/internals/components/CalendarOrClockPicker/calendarOrClockPickerClasses";
 
 const ArtistCollection = (props) => {
     const gallery = props.collection;
-    console.log(gallery);
     return (
-        
             <Box
                 sx={{
                     display: 'flex',
@@ -19,11 +18,14 @@ const ArtistCollection = (props) => {
                     display:'flex',
                     justifyContent:'center',
                     alignItems: 'row',
-                    height: '100px',
-                    width: '100px',
+                    height: '150px',
+                    width: '150px',
                     }}
                 >
                     <img src={gallery}></img>
+                    {/* {gallery.map((img) => {
+                        <img src={img}></img>
+                    })}                     */}
                 </Box>
             </Box>
         

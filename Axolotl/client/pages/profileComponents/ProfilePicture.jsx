@@ -5,38 +5,6 @@ import { useState } from 'react';
 
 const ProfilePicture = (props) => {
 
-    const getUrl = () => {
-        
-            // return(
-            //     <Typography
-            //         // sx={{
-            //         //         display: 'flex',
-            //         //         justifyContent: 'center',
-            //         //         maxWidth: "25%",
-            //         //         whiteSpace: 'nowrap'
-            //         //     }}
-            //     >
-            //         <TextField
-            //             value={profilePic}
-            //             name="profile picture"
-            //             type="text"
-            //             placeholder='Enter a new url for your profile picture'
-            //             label="profile picture"
-            //             // onChange={handleChange}
-            //             // onSubmit={setEdit(false)}
-            //         >
-            //         </TextField>
-            //         <Button
-            //             sx={{
-            //                  mt: 1,
-                             
-            //             }}>
-            //             Submit
-            //         </Button>
-            //     </Typography>
-            // );
-        }
-
 return (
     <Box sx={{
         display: 'flex',

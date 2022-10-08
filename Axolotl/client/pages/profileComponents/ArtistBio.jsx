@@ -4,16 +4,7 @@ import { useState, react } from 'react';
 import { Typography, Button } from "@mui/joy";
 
 const ArtistBio = (props) => {
-    // const {bio} = useState(props.bio);
 
-   
-
-    const submitBio = (event) =>{
-
-    }
-    const updateBio = (event) =>{
-
-    }
     return (
         <Typography
             sx={{

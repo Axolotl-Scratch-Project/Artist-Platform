@@ -36,7 +36,7 @@ const Login = (props) => {
     }
     axios.post('/api/login', reqOptions).then(res => {
       const data = res.data;
-      console.log(data.has_account);
+      console.log(data);
       if(data.has_account){
         navigate("/userview");
       }

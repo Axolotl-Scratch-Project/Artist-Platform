@@ -21,18 +21,25 @@ const Profile = (props) => {
     const [isOpen, setIsOpen] = useState(false);
     const [artistName ,setArtistName] = useState();
     const [collection, setCollection] = useState();
+    const [userId, setUserId] = useState();
+    // setUserId(localStorage.getItem("userId"));
+    let getRequest = 'http://localhost:3000/api/profile/artist?id='.concat(userId)
     useEffect( () =>{
         
         Axios.get('http://localhost:3000/api/profile/artist?id=2').then((data) => {
             // console.log(data.data.artistGalleryLinks);
             const artist = data.data.artistProfile;
             const gallery = data.data.artistGalleryLinks;
+            let newCollection = [];
             setBio(artist.bio);
             setProfilePic(artist.profile_image_url);
             setArtistName(artist.name);
-            setCollection(gallery[0].gallerypiece_url);
-            // console.log(collection);
+             gallery.map((url) => {
+                newCollection.push(url.gallerypiece_url);
+            });
+            setCollection(newCollection);
         })
+
     }, []);
     
     
@@ -72,6 +79,7 @@ const Profile = (props) => {
                     sx={{
                         flex: 7,
                     }}>
+                    
                     <Calendar/>
                     <ArtistCollection collection={collection}/>
                 </Box>    
