@@ -45,7 +45,6 @@ const UserView = () => {
         newData
        );
     } else if (name === 'category') {
-      console.log(value)
       let newData = value ==='All'||'' ? superData: superData.filter(element =>  element.categories_array.includes(value))
       setdata(
         newData
@@ -80,9 +79,12 @@ const UserView = () => {
       setdata(data.data)
       setSuperData(data.data);
     })
+
+    Axios.get('http://localhost:3000/api/isLoggedIn').then((data) => {
+      console.log(data);
+    })
   },[])
  
-console.log(data)
 
   // useEffect(() => {
   //   datax.filter(element =>  element.bookingrate > formValues.priceRange[0])
@@ -106,7 +108,7 @@ console.log(data)
             }} */}
 
             { data.map((element,index) => {
-                return <Post key = {index} name = {element.name} bio = {element.bio} bookingrate = {element.hourly_rate} category ={element.categories_array} id = {element.artist_id}/>
+                return <Post key = {index} name = {element.name} bio = {element.bio} bookingrate = {element.hourly_rate} category ={element.categories_array} id = {element.artist_id} profileimage = {element.profile_image_url}/>
               })}
 
           </Grid>

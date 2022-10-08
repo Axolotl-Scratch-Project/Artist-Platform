@@ -56,7 +56,15 @@ const Post = (props) => {
 
         window.localStorage.setItem('bookerId', localStorage.getItem('userId'));
         window.localStorage.setItem('bookerType', localStorage.getItem('userType'));
-    await Axios.post("http://localhost:8080/api/checkout",{infor})
+    const result = await Axios.post("http://localhost:3000/api/checkout",{infor})
+    console.log("Post", result)
+    window.location = result.data.url;
+    // .then(({ url }) => {
+
+    //   window.location = url
+    // }).catch( e=> {
+    //   console.error(e.error)
+    // })
     }
   };
 
