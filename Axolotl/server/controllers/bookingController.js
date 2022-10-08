@@ -58,6 +58,9 @@ bookingController.getBookings = async (req, res, next) => {
   console.log('bookingController.getBookings invoked');
   try {
     let { bookerId, bookerType } = req.body;
+    console.log("bookerType", bookerType)
+    bookerType = bookerType.replace(/\"/g, "");
+    console.log("bookerType", bookerType)
     if (bookerType === 'artist') {
       const artistBusinessBookingsQuery = `
       with bookings as (
@@ -109,9 +112,7 @@ bookingController.getBookings = async (req, res, next) => {
         inner join users as u on b.booker_id = u.id
         where b.booker_id = $1 and b.booker_type = $2
         `;
-        // console.log("bookerType", bookerType)
-        // bookerType = bookerType.replace(/\"/g, "");
-        // console.log("bookerType", bookerType)
+
         // bookerType = bookerType.slice(1, bookerType.length - 1);
         const userPersonalBookings = await db.query(userPersonalBookingsQuery, [bookerId, bookerType]);
         console.log("getBookings -> userPersonalBookings", userPersonalBookings)

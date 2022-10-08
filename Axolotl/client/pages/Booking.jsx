@@ -34,9 +34,14 @@ const Booking = () => {
   //   bookerType: 'user'
   // }
 
+  // const bookingInfo = {
+  //   bookerId: JSON.parse(window.localStorage.getItem('userId')),
+  //   bookerType: JSON.parse(window.localStorage.getItem('userType'))
+  // }
   const bookingInfo = {
-    bookerId: JSON.parse(window.localStorage.getItem('userId')),
-    bookerType: JSON.parse(window.localStorage.getItem('userType'))
+    bookerId: window.localStorage.getItem('userId'),
+    bookerType: window.localStorage.getItem('userType').replace(/\"/g, "")
+    // bookerType = bookerType.replace(/\"/g, "");
   }
 
   const [bookings, setBookings] = useState([]);
@@ -95,11 +100,11 @@ const Booking = () => {
         <p style = {activeStyle} variant="h5">Your Active Personal Bookings </p>
         <BookingTable bookings = {bookings} />
       </Box>
-      {/* <Box style = {tableStyle}>
+      <Box style = {tableStyle}>
         {bookingInfo.bookerType === 'artist' ? 'Show': 'Hide'}
         <p style = {activeStyle} variant="h5">Your Active Business Bookings </p>
         <BookingTable bookings = {bizBookings} />
-      </Box> */}
+      </Box>
       </Paper>
 
 
