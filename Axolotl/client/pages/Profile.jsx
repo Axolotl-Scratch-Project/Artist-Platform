@@ -22,19 +22,36 @@ const Profile = (props) => {
     const [artistName ,setArtistName] = useState();
     const [collection, setCollection] = useState();
     const [userId, setUserId] = useState();
-    // setUserId(localStorage.getItem("userId"));
-    let getRequest = 'http://localhost:3000/api/profile/artist?id='.concat(userId)
+
+    let getRequest = 'http://localhost:3000/api/profile/artist/?id='.concat(localStorage.getItem("artistID"));
+
+
+    // useEffect( () =>{
+
+    //     Axios.get('http://localhost:3000/api/profile/artist/?id=2').then((data) => {
+    //         const artist = data.data.artistProfile;
+    //         console.log(artist);
+    //         // const gallery = data.data.artistGalleryLinks;
+    //         // let newCollection = [];
+    //         setBio(artist.bio);
+    //         setProfilePic(artist.profile_image_url);
+    //         setArtistName(artist.name);
+    //         // gallery.map((url) => {
+    //         //     newCollection.push(url.gallerypiece_url);
+    //         // });
+    //         // setCollection(newCollection);
+    //     })
+    // }, []);
     useEffect( () =>{
-        
-        Axios.get('http://localhost:3000/api/profile/artist?id=2').then((data) => {
-            // console.log(data.data.artistGalleryLinks);
+        Axios.get(getRequest).then((data) => {
+
             const artist = data.data.artistProfile;
             const gallery = data.data.artistGalleryLinks;
             let newCollection = [];
             setBio(artist.bio);
             setProfilePic(artist.profile_image_url);
             setArtistName(artist.name);
-             gallery.map((url) => {
+            gallery.map((url) => {
                 newCollection.push(url.gallerypiece_url);
             });
             setCollection(newCollection);
@@ -69,9 +86,9 @@ const Profile = (props) => {
                     boxShadow: 1
                 }}>
                     <Button onClick={() => setIsOpen(true)}>Edit</Button>
-                    <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+                    {/* <Modal open={isOpen} onClose={() => setIsOpen(false)}>
                         <EditProfMenu/>
-                    </Modal >
+                    </Modal > */}
                     <ProfilePicture profilePic={profilePic} artistName={artistName}/>
                     <ArtistBio bio={bio}/>
                 </Box>
