@@ -37,9 +37,7 @@ const UserViewNav = () => {
   const toComponent=(address)=>{
     navigate('/'+ address);
   }
-  console.log(localStorage.getItem('userType')==='"user"' )
-  console.log(localStorage.getItem('userType'))
-  console.log(localStorage)
+
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -66,7 +64,7 @@ const UserViewNav = () => {
           >
             <MenuIcon />
           </IconButton> */}
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} onClick ={()=>toComponent('userView')}>
           Axolotl
           </Typography>
           {auth && (
