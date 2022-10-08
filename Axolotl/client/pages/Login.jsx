@@ -13,6 +13,7 @@ const Login = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+
   const handleChange = (event) => {
     //sets email and password in state, from user input
     if(event.target.name === 'email'){
@@ -34,13 +35,19 @@ const Login = (props) => {
         'password': password
       })
     }
-    axios.post('/api/login', reqOptions).then(res => {
+    axios.post('/api/login', {
+      'email': email,
+      'password': password
+    }).then(res => {
       const data = res.data;
       console.log(data);
       if(data.has_account){
-        navigate("/userview");
+        window.localStorage.setItem('userId', data.userId);
+        window.localStorage.setItem('userType', data.userType);
+        navigate("/userView");
       }
     })
+    
   };
   //rendering login page
   return (
